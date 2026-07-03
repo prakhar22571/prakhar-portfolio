@@ -3,16 +3,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-::-webkit-scrollbar {
-  width: 15px;
-}
-::-webkit-scrollbar-track {
-  background: #d1e5ff;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(#642bff, #ff22e6);
-  border-radius: 7px;
-}
 .avatar-update-btn::file-selector-button {
   width: 100%;
   padding: 7px;
