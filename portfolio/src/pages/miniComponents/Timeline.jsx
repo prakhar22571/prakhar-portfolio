@@ -1,14 +1,11 @@
-import axios from "axios";
+import api from "../../lib/api";
 import React, { useEffect, useState } from "react";
 
 const Timeline = () => {
   const [timeline, setTimeline] = useState([]);
   useEffect(() => {
     const getMyTimeline = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4000/api/v1/timeline/getall",
-        { withCredentials: true }
-      );
+      const { data } = await api.get("/api/v1/timeline/getall");
       setTimeline(data.timelines);
     };
     getMyTimeline();

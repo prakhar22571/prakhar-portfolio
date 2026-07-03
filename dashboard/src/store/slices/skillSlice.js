@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../lib/api";
 
 const skillSlice = createSlice({
   name: "skill",
@@ -86,10 +86,7 @@ const skillSlice = createSlice({
 export const getAllSkills = () => async (dispatch) => {
   dispatch(skillSlice.actions.getAllSkillsRequest());
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/skill/getall",
-      { withCredentials: true }
-    );
+    const response = await api.get("/api/v1/skill/getall");
     dispatch(skillSlice.actions.getAllSkillsSuccess(response.data.skills));
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {
@@ -102,11 +99,10 @@ export const getAllSkills = () => async (dispatch) => {
 export const addNewSkill = (data) => async (dispatch) => {
   dispatch(skillSlice.actions.addNewSkillRequest());
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/skill/add",
+    const response = await api.post(
+      "/api/v1/skill/add",
       data,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
@@ -122,11 +118,10 @@ export const addNewSkill = (data) => async (dispatch) => {
 export const updateSkill = (id, proficiency) => async (dispatch) => {
   dispatch(skillSlice.actions.updateSkillRequest());
   try {
-    const response = await axios.put(
-      `http://localhost:4000/api/v1/skill/update/${id}`,
+    const response = await api.put(
+      `/api/v1/skill/update/${id}`,
       { proficiency },
       {
-        withCredentials: true,
         headers: { "Content-Type": "application/json" },
       }
     );
@@ -140,12 +135,7 @@ export const updateSkill = (id, proficiency) => async (dispatch) => {
 export const deleteSkill = (id) => async (dispatch) => {
   dispatch(skillSlice.actions.deleteSkillRequest());
   try {
-    const response = await axios.delete(
-      `http://localhost:4000/api/v1/skill/delete/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.delete(`/api/v1/skill/delete/${id}`);
     dispatch(skillSlice.actions.deleteSkillSuccess(response.data.message));
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {

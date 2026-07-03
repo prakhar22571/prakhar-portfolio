@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../lib/api";
 
 const timelineSlice = createSlice({
   name: "timeline",
@@ -71,10 +71,7 @@ const timelineSlice = createSlice({
 export const getAllTimeline = () => async (dispatch) => {
   dispatch(timelineSlice.actions.getAllTimelineRequest());
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/timeline/getall",
-      { withCredentials: true }
-    );
+    const response = await api.get("/api/v1/timeline/getall");
     dispatch(
       timelineSlice.actions.getAllTimelineSuccess(response.data.timelines)
     );
@@ -89,11 +86,10 @@ export const getAllTimeline = () => async (dispatch) => {
 export const addNewTimeline = (data) => async (dispatch) => {
   dispatch(timelineSlice.actions.addNewTimelineRequest());
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/timeline/add",
+    const response = await api.post(
+      "/api/v1/timeline/add",
       data,
       {
-        withCredentials: true,
         headers: { "Content-Type": "application/json" },
       }
     );
@@ -110,12 +106,7 @@ export const addNewTimeline = (data) => async (dispatch) => {
 export const deleteTimeline = (id) => async (dispatch) => {
   dispatch(timelineSlice.actions.deleteTimelineRequest());
   try {
-    const response = await axios.delete(
-      `http://localhost:4000/api/v1/timeline/delete/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.delete(`/api/v1/timeline/delete/${id}`);
     dispatch(
       timelineSlice.actions.deleteTimelineSuccess(response.data.message)
     );

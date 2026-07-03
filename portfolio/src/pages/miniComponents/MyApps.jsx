@@ -1,15 +1,12 @@
 import { Card } from "@/components/ui/card";
-import axios from "axios";
+import api from "../../lib/api";
 import React, { useEffect, useState } from "react";
 
 const MyApps = () => {
   const [apps, setApps] = useState([]);
   useEffect(() => {
     const getMyApps = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4000/api/v1/softwareapplication/getall",
-        { withCredentials: true }
-      );
+      const { data } = await api.get("/api/v1/softwareapplication/getall");
       setApps(data.softwareApplications);
     };
     getMyApps();

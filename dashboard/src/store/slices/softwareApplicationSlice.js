@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../lib/api";
 
 const softwareApplicationSlice = createSlice({
   name: "softwareApplications",
@@ -73,10 +73,7 @@ export const getAllSoftwareApplications = () => async (dispatch) => {
     softwareApplicationSlice.actions.getAllsoftwareApplicationsRequest()
   );
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/softwareapplication/getall",
-      { withCredentials: true }
-    );
+    const response = await api.get("/api/v1/softwareapplication/getall");
     dispatch(
       softwareApplicationSlice.actions.getAllsoftwareApplicationsSuccess(
         response.data.softwareApplications
@@ -97,11 +94,10 @@ export const addNewSoftwareApplication = (data) => async (dispatch) => {
     softwareApplicationSlice.actions.addNewsoftwareApplicationsRequest()
   );
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/softwareapplication/add",
+    const response = await api.post(
+      "/api/v1/softwareapplication/add",
       data,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
@@ -125,11 +121,8 @@ export const deleteSoftwareApplication = (id) => async (dispatch) => {
     softwareApplicationSlice.actions.deletesoftwareApplicationsRequest()
   );
   try {
-    const response = await axios.delete(
-      `http://localhost:4000/api/v1/softwareapplication/delete/${id}`,
-      {
-        withCredentials: true,
-      }
+    const response = await api.delete(
+      `/api/v1/softwareapplication/delete/${id}`
     );
     dispatch(
       softwareApplicationSlice.actions.deletesoftwareApplicationsSuccess(

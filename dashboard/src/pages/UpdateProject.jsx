@@ -11,7 +11,7 @@ import { Link } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../lib/api";
 import SpecialLoadingButton from "./sub-components/SpecialLoadingButton";
 import {
   clearAllProjectErrors,
@@ -48,10 +48,8 @@ const UpdateProject = () => {
 
   useEffect(() => {
     const getProject = async () => {
-      await axios
-        .get(`http://localhost:4000/api/v1/project/get/${id}`, {
-          withCredentials: true,
-        })
+      await api
+        .get(`/api/v1/project/get/${id}`)
         .then((res) => {
           setTitle(res.data.project.title);
           setDescription(res.data.project.description);

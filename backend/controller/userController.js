@@ -2,7 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { User } from "../models/userSchema.js";
 import ErrorHandler from "../middlewares/error.js";
-import { generateToken } from "../utils/jwtToken.js";
+import { generateToken, cookieOptions } from "../utils/jwtToken.js";
 import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
 
@@ -94,7 +94,7 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
   res
     .status(200)
     .cookie("token", "", {
-      httpOnly: true,
+      ...cookieOptions(),
       expires: new Date(Date.now()),
     })
     .json({
@@ -193,8 +193,7 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getUserForPortfolio = catchAsyncErrors(async (req, res, next) => {
-  const id = "663296a896e553748ab5b0be";
-  const user = await User.findById(id);
+  const user = await User.findOne();
   res.status(200).json({
     success: true,
     user,

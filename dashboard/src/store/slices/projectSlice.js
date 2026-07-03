@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../lib/api";
 
 const projectSlice = createSlice({
   name: "project",
@@ -87,10 +87,7 @@ const projectSlice = createSlice({
 export const getAllProjects = () => async (dispatch) => {
   dispatch(projectSlice.actions.getAllProjectsRequest());
   try {
-    const response = await axios.get(
-      "http://localhost:4000/api/v1/project/getall",
-      { withCredentials: true }
-    );
+    const response = await api.get("/api/v1/project/getall");
     dispatch(
       projectSlice.actions.getAllProjectsSuccess(response.data.projects)
     );
@@ -105,11 +102,10 @@ export const getAllProjects = () => async (dispatch) => {
 export const addNewProject = (data) => async (dispatch) => {
   dispatch(projectSlice.actions.addNewProjectRequest());
   try {
-    const response = await axios.post(
-      "http://localhost:4000/api/v1/project/add",
+    const response = await api.post(
+      "/api/v1/project/add",
       data,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       }
     );
@@ -124,12 +120,7 @@ export const addNewProject = (data) => async (dispatch) => {
 export const deleteProject = (id) => async (dispatch) => {
   dispatch(projectSlice.actions.deleteProjectRequest());
   try {
-    const response = await axios.delete(
-      `http://localhost:4000/api/v1/project/delete/${id}`,
-      {
-        withCredentials: true,
-      }
-    );
+    const response = await api.delete(`/api/v1/project/delete/${id}`);
     dispatch(projectSlice.actions.deleteProjectSuccess(response.data.message));
     dispatch(projectSlice.actions.clearAllErrors());
   } catch (error) {
@@ -141,11 +132,10 @@ export const deleteProject = (id) => async (dispatch) => {
 export const updateProject = (id, newData) => async (dispatch) => {
   dispatch(projectSlice.actions.updateProjectRequest());
   try {
-    const response = await axios.put(
-      `http://localhost:4000/api/v1/project/update/${id}`,
+    const response = await api.put(
+      `/api/v1/project/update/${id}`,
       newData,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       }
     );

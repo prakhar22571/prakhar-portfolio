@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import axios from "axios";
+import api from "../../lib/api";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -9,10 +9,7 @@ const Portfolio = () => {
   const [projects, setProjects] = useState([]);
   useEffect(() => {
     const getMyProjects = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4000/api/v1/project/getall",
-        { withCredentials: true }
-      );
+      const { data } = await api.get("/api/v1/project/getall");
       setProjects(data.projects);
     };
     getMyProjects();

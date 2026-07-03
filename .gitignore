@@ -2,3 +2,7 @@ backend/node_modules
 portfolio/node_modules
 dashboard/node_modules
 backend/config
+dashboard/.env
+dashboard/.env.*
+portfolio/.env
+portfolio/.env.*

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+import api from "../../lib/api";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -13,12 +13,11 @@ const Contact = () => {
   const handleMessage = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await axios
+    await api
       .post(
-        "http://localhost:4000/api/v1/message/send",
+        "/api/v1/message/send",
         { senderName, subject, message },
         {
-          withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       )

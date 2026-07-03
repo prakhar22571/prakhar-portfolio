@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../lib/api";
 
 const userSlice = createSlice({
   name: "user",
@@ -112,10 +112,10 @@ const userSlice = createSlice({
 export const login = (email, password) => async (dispatch) => {
   dispatch(userSlice.actions.loginRequest());
   try {
-    const { data } = await axios.post(
-      "http://localhost:4000/api/v1/user/login",
+    const { data } = await api.post(
+      "/api/v1/user/login",
       { email, password },
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json" } }
     );
     dispatch(userSlice.actions.loginSuccess(data.user));
     dispatch(userSlice.actions.clearAllErrors());
@@ -127,9 +127,7 @@ export const login = (email, password) => async (dispatch) => {
 export const getUser = () => async (dispatch) => {
   dispatch(userSlice.actions.loadUserRequest());
   try {
-    const { data } = await axios.get("http://localhost:4000/api/v1/user/me", {
-      withCredentials: true,
-    });
+    const { data } = await api.get("/api/v1/user/me");
     dispatch(userSlice.actions.loadUserSuccess(data.user));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
@@ -139,10 +137,7 @@ export const getUser = () => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   try {
-    const { data } = await axios.get(
-      "http://localhost:4000/api/v1/user/logout",
-      { withCredentials: true }
-    );
+    const { data } = await api.get("/api/v1/user/logout");
     dispatch(userSlice.actions.logoutSuccess(data.message));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
@@ -154,11 +149,10 @@ export const updatePassword =
   (currentPassword, newPassword, confirmNewPassword) => async (dispatch) => {
     dispatch(userSlice.actions.updatePasswordRequest());
     try {
-      const { data } = await axios.put(
-        "http://localhost:4000/api/v1/user/password/update",
+      const { data } = await api.put(
+        "/api/v1/user/password/update",
         { currentPassword, newPassword, confirmNewPassword },
         {
-          withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       );
@@ -174,11 +168,10 @@ export const updatePassword =
 export const updateProfile = (data) => async (dispatch) => {
   dispatch(userSlice.actions.updateProfileRequest());
   try {
-    const response = await axios.put(
-      "http://localhost:4000/api/v1/user/me/profile/update",
+    const response = await api.put(
+      "/api/v1/user/me/profile/update",
       data,
       {
-        withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       }
     );

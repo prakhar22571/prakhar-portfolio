@@ -15,6 +15,8 @@ import projectRouter from "./routes/projectRouter.js";
 const app = express();
 dotenv.config({ path: "./config/.env" });
 
+app.get("/", (req, res) => res.status(200).json({ status: "ok" }));
+
 app.use(
   cors({
     origin: [process.env.PORTFOLIO_URL, process.env.DASHBOARD_URL],

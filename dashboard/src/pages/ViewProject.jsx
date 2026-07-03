@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../lib/api";
 import { Button } from "@/components/ui/button";
 
 const ViewProject = () => {
@@ -18,10 +18,8 @@ const ViewProject = () => {
 
   useEffect(() => {
     const getProject = async () => {
-      await axios
-        .get(`http://localhost:4000/api/v1/project/get/${id}`, {
-          withCredentials: true,
-        })
+      await api
+        .get(`/api/v1/project/get/${id}`)
         .then((res) => {
           setTitle(res.data.project.title);
           setDescription(res.data.project.description);
