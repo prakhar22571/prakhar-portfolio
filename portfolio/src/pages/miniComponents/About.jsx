@@ -27,7 +27,7 @@ const About = () => {
             <img
               src="/me.jpg"
               alt="avatar"
-              className="h-[240px] sm:h-[340px] md:h-[350px] lg:h-[450px] w-[180px] sm:w-[255px] md:w-[263px] lg:w-[338px] object-cover"
+              className="h-[240px] sm:h-[340px] md:h-[350px] lg:h-[450px] w-[180px] sm:w-[255px] md:w-[263px] lg:w-[338px] object-cover rounded-[2.5rem]"
             />
           </div>
           <div className="flex justify-center flex-col tracking-[1px] text-xl gap-5">
