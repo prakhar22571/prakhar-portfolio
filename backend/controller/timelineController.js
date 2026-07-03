@@ -30,7 +30,7 @@ export const deleteTimeline = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getAllTimelines = catchAsyncErrors(async (req, res, next) => {
-  const timelines = await Timeline.find();
+  const timelines = await Timeline.find().sort({ _id: -1 });
   res.status(200).json({
     success: true,
     timelines,
