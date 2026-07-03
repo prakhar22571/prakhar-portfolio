@@ -78,7 +78,7 @@ export const getAllTimeline = () => async (dispatch) => {
     dispatch(timelineSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      timelineSlice.actions.getAllTimelineFailed(error.response.data.message)
+      timelineSlice.actions.getAllTimelineFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -99,7 +99,7 @@ export const addNewTimeline = (data) => async (dispatch) => {
     dispatch(timelineSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      timelineSlice.actions.addNewTimelineFailed(error.response.data.message)
+      timelineSlice.actions.addNewTimelineFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -113,7 +113,7 @@ export const deleteTimeline = (id) => async (dispatch) => {
     dispatch(timelineSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      timelineSlice.actions.deleteTimelineFailed(error.response.data.message)
+      timelineSlice.actions.deleteTimelineFailed(error.response?.data?.message || error.message)
     );
   }
 };

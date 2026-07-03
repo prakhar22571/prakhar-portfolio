@@ -91,7 +91,7 @@ export const getAllSkills = () => async (dispatch) => {
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      skillSlice.actions.getAllSkillsFailed(error.response.data.message)
+      skillSlice.actions.getAllSkillsFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -111,7 +111,7 @@ export const addNewSkill = (data) => async (dispatch) => {
     dispatch(skillSlice.actions.addNewSkillSuccess(response.data.message));
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(skillSlice.actions.addNewSkillFailed(error.response.data.message));
+    dispatch(skillSlice.actions.addNewSkillFailed(error.response?.data?.message || error.message));
   }
 };
 
@@ -128,7 +128,7 @@ export const updateSkill = (id, proficiency) => async (dispatch) => {
     dispatch(skillSlice.actions.updateSkillSuccess(response.data.message));
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(skillSlice.actions.updateSkillFailed(error.response.data.message));
+    dispatch(skillSlice.actions.updateSkillFailed(error.response?.data?.message || error.message));
   }
 };
 
@@ -139,7 +139,7 @@ export const deleteSkill = (id) => async (dispatch) => {
     dispatch(skillSlice.actions.deleteSkillSuccess(response.data.message));
     dispatch(skillSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(skillSlice.actions.deleteSkillFailed(error.response.data.message));
+    dispatch(skillSlice.actions.deleteSkillFailed(error.response?.data?.message || error.message));
   }
 };
 

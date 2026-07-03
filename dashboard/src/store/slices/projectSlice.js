@@ -94,7 +94,7 @@ export const getAllProjects = () => async (dispatch) => {
     dispatch(projectSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      projectSlice.actions.getAllProjectsFailed(error.response.data.message)
+      projectSlice.actions.getAllProjectsFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -113,7 +113,7 @@ export const addNewProject = (data) => async (dispatch) => {
     dispatch(projectSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      projectSlice.actions.addNewProjectFailed(error.response.data.message)
+      projectSlice.actions.addNewProjectFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -125,7 +125,7 @@ export const deleteProject = (id) => async (dispatch) => {
     dispatch(projectSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      projectSlice.actions.deleteProjectFailed(error.response.data.message)
+      projectSlice.actions.deleteProjectFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -144,7 +144,7 @@ export const updateProject = (id, newData) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(
-      projectSlice.actions.updateProjectFailed(error.response.data.message)
+      projectSlice.actions.updateProjectFailed(error.response?.data?.message || error.message)
     );
   }
 };

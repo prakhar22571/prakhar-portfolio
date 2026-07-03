@@ -83,7 +83,7 @@ export const getAllSoftwareApplications = () => async (dispatch) => {
   } catch (error) {
     dispatch(
       softwareApplicationSlice.actions.getAllsoftwareApplicationsFailed(
-        error.response.data.message
+        error.response?.data?.message || error.message
       )
     );
   }
@@ -110,7 +110,7 @@ export const addNewSoftwareApplication = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(
       softwareApplicationSlice.actions.addNewsoftwareApplicationsFailed(
-        error.response.data.message
+        error.response?.data?.message || error.message
       )
     );
   }
@@ -133,7 +133,7 @@ export const deleteSoftwareApplication = (id) => async (dispatch) => {
   } catch (error) {
     dispatch(
       softwareApplicationSlice.actions.deletesoftwareApplicationsFailed(
-        error.response.data.message
+        error.response?.data?.message || error.message
       )
     );
   }

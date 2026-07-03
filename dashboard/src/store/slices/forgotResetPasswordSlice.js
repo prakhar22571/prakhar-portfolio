@@ -63,7 +63,7 @@ export const forgotPassword = (email) => async (dispatch) => {
     console.log(error);
     dispatch(
       forgotResetPassSlice.actions.forgotPasswordFailed(
-        error.response.data.message
+        error.response?.data?.message || error.message
       )
     );
   }
@@ -88,7 +88,7 @@ export const resetPassword =
       console.log(error);
       dispatch(
         forgotResetPassSlice.actions.resetPasswordFailed(
-          error.response.data.message
+          error.response?.data?.message || error.message
         )
       );
     }

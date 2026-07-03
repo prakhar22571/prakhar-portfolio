@@ -63,7 +63,7 @@ export const getAllMessages = () => async (dispatch) => {
     dispatch(messageSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      messageSlice.actions.getAllMessagesFailed(error.response.data.message)
+      messageSlice.actions.getAllMessagesFailed(error.response?.data?.message || error.message)
     );
   }
 };
@@ -76,7 +76,7 @@ export const deleteMessage = (id) => async (dispatch) => {
     dispatch(messageSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
-      messageSlice.actions.deleteMessageFailed(error.response.data.message)
+      messageSlice.actions.deleteMessageFailed(error.response?.data?.message || error.message)
     );
   }
 };
