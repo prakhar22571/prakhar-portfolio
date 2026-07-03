@@ -26,7 +26,7 @@ const Portfolio = () => {
           }}
         >
           MY{" "}
-          <span className="text-tubeLight-effect font-extrabold">
+          <span className="text-tubeLight-effect font-extrabold mr-[-15px]">
             PORTFOLIO
           </span>
         </h1>
@@ -38,7 +38,7 @@ const Portfolio = () => {
             background: "hsl(222.2 84% 4.9%)",
           }}
         >
-          MY <span className="text-tubeLight-effect font-extrabold">WORK</span>
+          MY <span className="text-tubeLight-effect font-extrabold mr-[-15px]">WORK</span>
         </h1>
         <span className="absolute w-full h-1 top-7 sm:top-7 md:top-8 lg:top-11 z-[-1] bg-slate-200"></span>
       </div>

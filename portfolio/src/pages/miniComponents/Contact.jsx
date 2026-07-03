@@ -46,7 +46,7 @@ const Contact = () => {
             }}
           >
             CONTACT
-            <span className="text-tubeLight-effect font-extrabold">ME</span>
+            <span className="text-tubeLight-effect font-extrabold mr-[-15px]">ME</span>
           </h1>
           <span
             className="absolute w-full h-1 top-7 sm:top-7 
