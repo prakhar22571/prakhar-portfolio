@@ -39,7 +39,7 @@ const Hero = () => {
       sm:text-[1.75rem] md:text-[2.2rem] lg:text-[2.8rem] tracking-[15px]"
       >
         <Typewriter
-          words={["FULLSTACK DEVELOPER"]}
+          words={["FULLSTACK DEVELOPER", "DEVOPS ENGINEER", "BACKEND DEVELOPER"]}
           loop={50}
           cursor
           typeSpeed={70}
@@ -73,14 +73,14 @@ const Hero = () => {
             <span>Github</span>
           </Button>
         </Link>
-        {/* <Link to={user.resume && user.resume.url} target="_blank">
+        <Link to={user.resume && user.resume.url} target="_blank">
           <Button className="rounded-[30px] flex items-center gap-2 flex-row">
             <span>
               <ExternalLink />
             </span>
             <span>Resume</span>
           </Button>
-        </Link> */}
+        </Link>
       </div>
       <p className="mt-8 text-xl tracking-[2px] whitespace-pre-line">{user.aboutMe}</p>
       <hr className="my-8 md::my-10 " />
