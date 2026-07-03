@@ -32,14 +32,19 @@ const About = () => {
           </div>
           <div className="flex justify-center flex-col tracking-[1px] text-xl gap-5">
             <p>
-              My name is Prakhar Rai. I am a student of Indian Institute of Information Technology, Bhagalpur
-              pursuing B.Tech in Computer Science & Engineering [2021 - 2025]. I work as
-              a web developer. My hobbies include watching
-              movies,playing esports, and occasionally cooking.
+              I'm Prakhar Rai, a Software Engineer at UKG building large-scale
+              developer platforms, CI/CD infrastructure, and internal AI
+              tooling. I hold a B.Tech in Computer Science & Engineering from
+              the Indian Institute of Information Technology, Bhagalpur
+              (2021 - 2025), and I work at the intersection of backend
+              engineering, cloud infrastructure, and practical AI systems.
             </p>
             <p className="tracking-[1px] text-xl">
-               My commitment and persistence are essential to me. 
-               I have the courage to tackle any challenges for extended durations.
+              I'm a Top 1.3% LeetCode Guardian and a Codeforces Expert, and
+              outside of work I build end-to-end systems that solve real
+              engineering problems — from an offline AI code review assistant
+              to a Bluetooth Mesh-based offline UPI payment system for
+              low-connectivity environments.
             </p>
           </div>
         </div>
