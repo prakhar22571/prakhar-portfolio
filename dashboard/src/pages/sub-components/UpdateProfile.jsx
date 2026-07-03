@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { Textarea } from "@/components/ui/textarea";
 import SpecialLoadingButton from "./SpecialLoadingButton";
 import { Link } from "react-router-dom";
+import { FileText } from "lucide-react";
 
 const UpdateProfile = () => {
   const { user, loading, error, isUpdated, message } = useSelector(
@@ -43,10 +44,7 @@ const UpdateProfile = () => {
   const [avatarPreview, setAvatarPreview] = useState(
     user && user.avatar && user.avatar.url
   );
-  const [resume, setResume] = useState(user && user.resume && user.resume.url);
-  const [resumePreview, setResumePreview] = useState(
-    user && user.resume && user.resume.url
-  );
+  const [resume, setResume] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -61,12 +59,7 @@ const UpdateProfile = () => {
   };
   const resumeHandler = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setResumePreview(reader.result);
-      setResume(file);
-    };
+    setResume(file);
   };
 
   const handleUpdateProfile = () => {
@@ -130,19 +123,29 @@ const UpdateProfile = () => {
                 </div>
                 <div className="grid gap-2 w-full sm:w-72">
                   <Label>Resume</Label>
-                  <Link
-                    to={user && user.resume && user.resume.url}
-                    target="_blank"
-                  >
-                    <img
-                      src={resumePreview ? resumePreview : "/avatarHolder.jpg"}
-                      alt="avatar"
-                      className="w-full  h-auto sm:w-72 sm:h-72 rounded-2xl"
-                    />
-                  </Link>
+                  <div className="w-full sm:w-72 min-h-32 rounded-2xl border flex flex-col items-center justify-center gap-2 p-6 text-center">
+                    <FileText className="w-10 h-10 shrink-0" />
+                    <span className="text-sm break-all">
+                      {resume
+                        ? resume.name
+                        : user && user.resume
+                        ? "Current resume on file"
+                        : "No resume uploaded"}
+                    </span>
+                    {user && user.resume && user.resume.url && (
+                      <Link
+                        to={user.resume.url}
+                        target="_blank"
+                        className="text-sm underline"
+                      >
+                        View current resume
+                      </Link>
+                    )}
+                  </div>
                   <div className="relative">
                     <input
                       type="file"
+                      accept="application/pdf"
                       onChange={resumeHandler}
                       className="avatar-update-btn"
                     />
