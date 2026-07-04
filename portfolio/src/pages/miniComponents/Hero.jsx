@@ -39,7 +39,7 @@ const Hero = () => {
       sm:text-[1.75rem] md:text-[2.2rem] lg:text-[2.8rem] tracking-[15px]"
       >
         <Typewriter
-          words={["FULLSTACK DEVELOPER", "DEVOPS ENGINEER", "BACKEND DEVELOPER"]}
+          words={["AI ENGINEER", "BACKEND ENGINEER", "DEVOPS ENGINEER"]}
           loop={50}
           cursor
           typeSpeed={70}
