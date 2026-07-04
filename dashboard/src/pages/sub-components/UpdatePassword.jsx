@@ -10,6 +10,7 @@ import {
   updatePassword,
 } from "@/store/slices/userSlice";
 import SpecialLoadingButton from "./SpecialLoadingButton";
+import { Reveal } from "@/components/reveal";
 
 const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -37,9 +38,8 @@ const Profile = () => {
     }
   }, [dispatch, isAuthenticated, error, message]);
   return (
-    <>
-      <div className="w-full h-full">
-        <div>
+    <Reveal as="div" className="w-full h-full">
+      <div>
           <div className="grid w-[100%] gap-6">
             <div className="grid gap-2">
               <h1 className="text-3xl font-bold">Update Password</h1>
@@ -85,8 +85,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </Reveal>
   );
 };
 

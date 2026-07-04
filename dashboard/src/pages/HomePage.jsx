@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
+import { AnimatePresence, m } from "framer-motion";
 import Dashboard from "./sub-components/Dashboard";
 import AddSkill from "./sub-components/AddSkill";
 import AddProject from "./sub-components/AddProject";
@@ -30,6 +31,47 @@ import { logout, clearAllUserErrors } from "@/store/slices/userSlice";
 import { toast } from "react-toastify";
 import Messages from "./sub-components/Messages";
 import AddTimeline from "./sub-components/AddTimeline";
+import { ModeToggle } from "@/components/mode-toggle";
+import { usePrefersReducedMotion } from "@/hooks/use-reduced-motion";
+
+const NAV_ITEMS = [
+  { key: "Dashboard", label: "Dashboard", icon: Home },
+  { key: "Add Project", label: "Add Project", icon: FolderGit },
+  { key: "Add Skill", label: "Add Skill", icon: PencilRuler },
+  { key: "Add Uses", label: "Add Uses", icon: LayoutGrid },
+  { key: "Add Timeline", label: "Add Timeline", icon: History },
+  { key: "Messages", label: "Messages", icon: MessageSquareMore },
+  { key: "Account", label: "Account", icon: User },
+];
+
+const SidebarNavItem = ({ item, active, setActive }) => {
+  const isActive = active === item.key;
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link
+            className={`relative flex h-9 w-9 items-center justify-center rounded-lg ${
+              isActive ? "text-accent-foreground" : "text-muted-foreground"
+            } transition-colors hover:text-foreground md:h-8 md:w-8`}
+            onClick={() => setActive(item.key)}
+          >
+            {isActive && (
+              <m.span
+                layoutId="sidebar-active-pill"
+                className="glass absolute inset-0 rounded-lg shadow-glow-sm"
+                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              />
+            )}
+            <item.icon className="relative z-10 h-5 w-5" />
+            <span className="sr-only">{item.label}</span>
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="right">{item.label}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 const HomePage = () => {
   const [active, setActive] = useState("");
@@ -37,6 +79,7 @@ const HomePage = () => {
     (state) => state.user
   );
   const dispatch = useDispatch();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const handleLogout = () => {
     dispatch(logout());
     toast.success("Logged Out!");
@@ -51,143 +94,43 @@ const HomePage = () => {
       navigateTo("/login");
     }
   }, [isAuthenticated, authChecked]);
+
+  const renderActiveSection = () => {
+    switch (active) {
+      case "Dashboard":
+        return <Dashboard />;
+      case "Add Project":
+        return <AddProject />;
+      case "Add Skill":
+        return <AddSkill />;
+      case "Add Uses":
+        return <AddSoftwareApplications />;
+      case "Add Timeline":
+        return <AddTimeline />;
+      case "Messages":
+        return <Messages />;
+      case "Account":
+        return <Account />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 hidden w-14 flex-col border-r bg-background sm:flex z-50">
+    <div className="relative flex min-h-screen w-full flex-col bg-muted/40">
+      <div
+        aria-hidden="true"
+        className="bg-aurora animate-float pointer-events-none fixed inset-0 -z-10 opacity-60"
+      />
+      <aside className="glass fixed inset-y-0 left-0 hidden w-14 flex-col border-r sm:flex z-50">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Link className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
             <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
             <span className="sr-only">Acme Inc</span>
           </Link>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Dashboard"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Dashboard")}
-                >
-                  <Home className="h-5 w-5" />
-                  <span className="sr-only">Dashboard</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Add Project"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Add Project")}
-                >
-                  <FolderGit className="h-5 w-5" />
-                  <span className="sr-only">Add Project</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Add Project</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Add Skill"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Add Skill")}
-                >
-                  <PencilRuler className="h-5 w-5" />
-                  <span className="sr-only">Add Skill</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Add Skill</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Add Uses"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Add Uses")}
-                >
-                  <LayoutGrid className="h-5 w-5" />
-                  <span className="sr-only">Add Uses</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Add Uses</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Add Timeline"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Add Timeline")}
-                >
-                  <History className="h-5 w-5" />
-                  <span className="sr-only">Add Timeline</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Add Timeline</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Messages"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Messages")}
-                >
-                  <MessageSquareMore className="h-5 w-5" />
-                  <span className="sr-only">Messages</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Messages</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                    active === "Account"
-                      ? "text-accent-foreground bg-accent"
-                      : "text-muted-foreground"
-                  }  transition-colors hover:text-foreground md:h-8 md:w-8`}
-                  onClick={() => setActive("Account")}
-                >
-                  <User className="h-5 w-5" />
-                  <span className="sr-only">Account</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Account</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {NAV_ITEMS.map((item) => (
+            <SidebarNavItem key={item.key} item={item} active={active} setActive={setActive} />
+          ))}
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
           <TooltipProvider>
@@ -206,7 +149,7 @@ const HomePage = () => {
           </TooltipProvider>
         </nav>
       </aside>
-      <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 max-[900px]:h-[100px]">
+      <header className="glass sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:backdrop-blur-none sm:px-6 max-[900px]:h-[100px]">
         <Sheet>
           <SheetTrigger asChild>
             <Button size="icon" variant="outline" className="sm:hidden">
@@ -214,7 +157,7 @@ const HomePage = () => {
               <span className="sr-only">Toggle Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="sm:max-w-xs">
+          <SheetContent side="left" className="glass sm:max-w-xs">
             <nav className="grid gap-6 text-lg font-medium">
               <Link
                 className={`group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base`}
@@ -317,41 +260,29 @@ const HomePage = () => {
           <img
             src={user && user.avatar && user.avatar.url}
             alt="avatar"
-            className="w-20 h-20 rounded-full max-[900px]:hidden"
+            loading="lazy"
+            decoding="async"
+            className="w-20 h-20 rounded-full max-[900px]:hidden shadow-glow-sm"
           />
           <h1 className="text-4xl max-[900px]:text-2xl">
             Welcome back, {user.fullName}
           </h1>
         </div>
+        <div className="ml-auto">
+          <ModeToggle />
+        </div>
       </header>
-      {(() => {
-        switch (active) {
-          case "Dashboard":
-            return <Dashboard />;
-            break;
-          case "Add Project":
-            return <AddProject />;
-            break;
-          case "Add Skill":
-            return <AddSkill />;
-            break;
-          case "Add Uses":
-            return <AddSoftwareApplications />;
-            break;
-          case "Add Timeline":
-            return <AddTimeline />;
-            break;
-          case "Messages":
-            return <Messages />;
-            break;
-          case "Account":
-            return <Account />;
-            break;
-          default:
-            return <Dashboard />;
-            break;
-        }
-      })()}
+      <AnimatePresence mode="wait">
+        <m.div
+          key={active || "Dashboard"}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={prefersReducedMotion ? {} : { opacity: 0, y: -8 }}
+          transition={{ duration: 0.25 }}
+        >
+          {renderActiveSection()}
+        </m.div>
+      </AnimatePresence>
     </div>
   );
 };

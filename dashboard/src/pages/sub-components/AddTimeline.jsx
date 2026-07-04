@@ -5,12 +5,15 @@ import { toast } from "react-toastify";
 import SpecialLoadingButton from "./SpecialLoadingButton";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { GlassCard, CardContent } from "@/components/ui/glass-card";
 import {
   addNewTimeline,
   clearAllTimelineErrors,
   getAllTimeline,
   resetTimelineSlice,
 } from "@/store/slices/timelineSlice";
+import { RevealGroup, RevealItem } from "@/components/reveal";
 
 const AddTimeline = () => {
   const [title, setTitle] = useState("");
@@ -44,101 +47,71 @@ const AddTimeline = () => {
   }, [dispatch, error, message, loading]);
 
   return (
-    <>
-      <div className="flex justify-center items-center min-h-[100vh] sm:gap-4 sm:py-4 sm:pl-14">
-        <form
-          className="w-[100%] px-5 md:w-[650px]"
-          onSubmit={handleAddNewTimeline}
-        >
-          <div className="space-y-12">
-            <div className="border-b border-gray-900/10 pb-12">
-              <h2 className="font-semibold leading-7 text-gray-900 text-3xl text-center">
-                ADD A NEW TIMELINE
-              </h2>
-              <div className="mt-10 flex flex-col gap-5">
-                <div className="w-full sm:col-span-4">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Title
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                      <input
-                        type="text"
-                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        placeholder="Matriculation"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full sm:col-span-4">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Description
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                      <Textarea
-                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        placeholder="Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full sm:col-span-4">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Starting Point (From)
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                      <Input
-                        type="number"
-                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        placeholder="From"
-                        value={from}
-                        onChange={(e) => setFrom(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full sm:col-span-4">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    Ending Point (To)
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                      <input
-                        type="number"
-                        className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        placeholder="To"
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="relative flex justify-center items-center min-h-[100vh] sm:gap-4 sm:py-4 px-5">
+      <div
+        aria-hidden="true"
+        className="bg-aurora animate-float pointer-events-none fixed inset-0 -z-10 opacity-60"
+      />
+      <form className="w-[100%] md:w-[650px]" onSubmit={handleAddNewTimeline}>
+        <GlassCard>
+          <CardContent className="p-6 sm:p-10">
+            <h2 className="font-semibold leading-7 text-3xl text-center mb-8">
+              ADD A NEW TIMELINE
+            </h2>
+            <RevealGroup as="div" className="flex flex-col gap-5" stagger={0.08}>
+              <RevealItem className="w-full sm:col-span-4">
+                <Label>Title</Label>
+                <Input
+                  className="mt-2 focus-visible:shadow-glow-sm"
+                  placeholder="Matriculation"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </RevealItem>
+              <RevealItem className="w-full sm:col-span-4">
+                <Label>Description</Label>
+                <Textarea
+                  className="mt-2 focus-visible:shadow-glow-sm"
+                  placeholder="Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </RevealItem>
+              <RevealItem className="w-full sm:col-span-4">
+                <Label>Starting Point (From)</Label>
+                <Input
+                  type="number"
+                  className="mt-2 focus-visible:shadow-glow-sm"
+                  placeholder="From"
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                />
+              </RevealItem>
+              <RevealItem className="w-full sm:col-span-4">
+                <Label>Ending Point (To)</Label>
+                <Input
+                  type="number"
+                  className="mt-2 focus-visible:shadow-glow-sm"
+                  placeholder="To"
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                />
+              </RevealItem>
+            </RevealGroup>
 
-          <div className="mt-6 flex items-center justify-end gap-x-6">
-            {!loading ? (
-              <Button
-                type="submit"
-                onClick={() => handleAddNewSkill()}
-                className="w-full"
-              >
-                Add Timeline
-              </Button>
-            ) : (
-              <SpecialLoadingButton content={"Adding New Skill"} />
-            )}
-          </div>
-        </form>
-      </div>
-    </>
+            <div className="mt-6 flex items-center justify-end gap-x-6">
+              {!loading ? (
+                <Button type="submit" className="w-full hover:shadow-glow">
+                  Add Timeline
+                </Button>
+              ) : (
+                <SpecialLoadingButton content={"Adding New Timeline"} />
+              )}
+            </div>
+          </CardContent>
+        </GlassCard>
+      </form>
+    </div>
   );
 };
 

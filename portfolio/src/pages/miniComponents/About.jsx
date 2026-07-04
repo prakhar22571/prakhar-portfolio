@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Reveal } from "@/components/reveal";
 
 const About = () => {
   return (
     <div className="w-full flex flex-col overflow-x-hidden">
       <div className="relative">
         <h1
-          className="flex gap-4 items-center text-[2rem] sm:text-[2.75rem] 
-          md:text-[3rem] lg:text-[3.8rem] leading-[56px] md:leading-[67px] 
-          lg:leading-[90px] tracking-[15px] mx-auto w-fit font-extrabold about-h1"
-          style={{
-            background: "hsl(222.2 84% 4.9%)",
-          }}
+          className="flex gap-4 items-center text-[2rem] sm:text-[2.75rem]
+          md:text-[3rem] lg:text-[3.8rem] leading-[56px] md:leading-[67px]
+          lg:leading-[90px] tracking-[15px] mx-auto w-fit font-extrabold about-h1 bg-background"
         >
           ABOUT <span className="text-tubeLight-effect font-extrabold mr-[-15px]">ME</span>
         </h1>
-        <span className="absolute w-full h-1 top-7 sm:top-7 md:top-8 lg:top-11 z-[-1] bg-slate-200"></span>
+        <span className="absolute w-full h-1 top-7 sm:top-7 md:top-8 lg:top-11 z-[-1] bg-border"></span>
       </div>
       <div className="text-center">
         <p className="uppercase text-xl text-slate-400">
@@ -23,14 +21,16 @@ const About = () => {
       </div>
       <div>
         <div className="grid md:grid-cols-2 my-8 sm:my-20 gap-14">
-          <div className="flex justify-center items-center">
+          <Reveal as="div" variants={{ hidden: { opacity: 0, x: -24 }, show: { opacity: 1, x: 0, transition: { duration: 0.5 } } }} className="flex justify-center items-center">
             <img
               src="/me.jpg"
               alt="avatar"
-              className="h-[240px] sm:h-[340px] md:h-[350px] lg:h-[450px] w-[180px] sm:w-[255px] md:w-[263px] lg:w-[338px] object-cover rounded-[2.5rem]"
+              loading="lazy"
+              decoding="async"
+              className="h-[240px] sm:h-[340px] md:h-[350px] lg:h-[450px] w-[180px] sm:w-[255px] md:w-[263px] lg:w-[338px] object-cover rounded-[2.5rem] shadow-glow"
             />
-          </div>
-          <div className="flex justify-center flex-col tracking-[1px] text-xl gap-5">
+          </Reveal>
+          <Reveal as="div" variants={{ hidden: { opacity: 0, x: 24 }, show: { opacity: 1, x: 0, transition: { duration: 0.5 } } }} className="flex justify-center flex-col tracking-[1px] text-xl gap-5">
             <p>
               I'm Prakhar Rai, a Software Engineer at UKG building large-scale
               developer platforms, CI/CD infrastructure, and internal AI
@@ -46,7 +46,7 @@ const About = () => {
               to a Bluetooth Mesh-based offline UPI payment system for
               low-connectivity environments.
             </p>
-          </div>
+          </Reveal>
         </div>
       </div>
     </div>

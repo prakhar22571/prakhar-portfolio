@@ -6,13 +6,12 @@
 
 .text-tubeLight-effect {
   display: flex;
-  color: #fff;
+  color: hsl(var(--foreground));
   position: relative;
   text-transform: uppercase;
   width: 100%;
   outline: none;
   overflow-y: hidden;
-  /* -webkit-box-reflect: below -27px linear-gradient(transparent, #ffffff40); */
   animation: animate 5s linear infinite;
 }
 @keyframes animate {
@@ -25,7 +24,7 @@
   80%,
   90.1%,
   92% {
-    color: gray;
+    color: hsl(var(--muted-foreground));
     text-shadow: none;
   }
   18.1%,
@@ -38,9 +37,9 @@
   90.1%,
   92.1%,
   100% {
-    color: #fff;
-    text-shadow: 0 0 1px rgb(150, 150, 150), 0 0 2px rgb(150, 150, 150),
-      0 0 2px rgb(150, 150, 150), 0 0 5px rgb(150, 150, 150),
-      0 0 20px rgb(150, 150, 150);
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 1px hsl(var(--primary) / 0.5), 0 0 2px hsl(var(--primary) / 0.5),
+      0 0 2px hsl(var(--primary) / 0.5), 0 0 5px hsl(var(--primary) / 0.4),
+      0 0 20px hsl(var(--primary) / 0.3);
   }
 }

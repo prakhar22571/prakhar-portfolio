@@ -4,41 +4,45 @@ import { Label } from "@/components/ui/label";
 import { useSelector } from "react-redux";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
+import { Reveal } from "@/components/reveal";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
   return (
-    <>
-      <div className="w-full h-full">
-        <div>
-          <div className="grid w-[100%] gap-6">
-            <div className="grid gap-2">
-              <h1 className="text-3xl font-bold">Profile</h1>
-              <p className="text-balance text-muted-foreground">
-                Full Profile Preview
-              </p>
-            </div>
-            <div className="grid gap-4">
-              <div className="flex items-start lg:justify-between lg:items-center flex-col lg:flex-row gap-5">
-                <div className="grid gap-2 w-full sm:w-72">
-                  <Label>Profile Image</Label>
-                  <img
-                    src={user && user.avatar && user.avatar.url}
-                    alt="avatar"
-                    className="w-full h-auto sm:w-72 sm:h-72 rounded-2xl"
-                  />
-                </div>
-                <div className="grid gap-2 w-full sm:w-72">
-                  <Label>Resume</Label>
-                  <Link to={user && user.resume && user.resume.url} target="_blank">
-                    <img
-                      src={user && user.resume && user.resume.url}
-                      alt="avatar"
-                      className="w-full  h-auto sm:w-72 sm:h-72 rounded-2xl"
-                    />
-                  </Link>
-                </div>
+    <Reveal as="div" className="w-full h-full">
+      <div>
+        <div className="grid w-[100%] gap-6">
+          <div className="grid gap-2">
+            <h1 className="text-3xl font-bold">Profile</h1>
+            <p className="text-balance text-muted-foreground">
+              Full Profile Preview
+            </p>
+          </div>
+          <div className="grid gap-4">
+            <div className="flex items-start lg:justify-between lg:items-center flex-col lg:flex-row gap-5">
+              <div className="grid gap-2 w-full sm:w-72">
+                <Label>Profile Image</Label>
+                <img
+                  src={user && user.avatar && user.avatar.url}
+                  alt="avatar"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-auto sm:w-72 sm:h-72 rounded-2xl shadow-glow-sm"
+                />
               </div>
+              <div className="grid gap-2 w-full sm:w-72">
+                <Label>Resume</Label>
+                <Link to={user && user.resume && user.resume.url} target="_blank">
+                  <img
+                    src={user && user.resume && user.resume.url}
+                    alt="avatar"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full  h-auto sm:w-72 sm:h-72 rounded-2xl shadow-glow-sm"
+                  />
+                </Link>
+              </div>
+            </div>
               <div className="grid gap-2">
                 <Label>Full Name</Label>
                 <Input type="text" defaultValue={user.fullName} disabled />
@@ -82,8 +86,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </Reveal>
   );
 };
 
