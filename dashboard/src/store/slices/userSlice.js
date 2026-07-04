@@ -122,6 +122,7 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       { headers: { "Content-Type": "application/json" } }
     );
+    localStorage.setItem("token", data.token);
     dispatch(userSlice.actions.loginSuccess(data.user));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
@@ -136,6 +137,7 @@ export const getUser = () => async (dispatch) => {
     dispatch(userSlice.actions.loadUserSuccess(data.user));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
+    localStorage.removeItem("token");
     dispatch(userSlice.actions.loadUserFailed(error.response?.data?.message || error.message));
   }
 };
@@ -143,6 +145,7 @@ export const getUser = () => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     const { data } = await api.get("/api/v1/user/logout");
+    localStorage.removeItem("token");
     dispatch(userSlice.actions.logoutSuccess(data.message));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
