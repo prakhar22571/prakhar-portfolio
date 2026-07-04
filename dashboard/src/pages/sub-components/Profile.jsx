@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import { Reveal } from "@/components/reveal";
+import { FileText } from "lucide-react";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -32,15 +33,21 @@ const Profile = () => {
               </div>
               <div className="grid gap-2 w-full sm:w-72">
                 <Label>Resume</Label>
-                <Link to={user && user.resume && user.resume.url} target="_blank">
-                  <img
-                    src={user && user.resume && user.resume.url}
-                    alt="avatar"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full  h-auto sm:w-72 sm:h-72 rounded-2xl shadow-glow-sm"
-                  />
-                </Link>
+                <div className="w-full sm:w-72 min-h-32 sm:h-72 rounded-2xl shadow-glow-sm border flex flex-col items-center justify-center gap-2 p-6 text-center">
+                  <FileText className="w-10 h-10 shrink-0" />
+                  <span className="text-sm">
+                    {user && user.resume ? "Resume on file" : "No resume uploaded"}
+                  </span>
+                  {user && user.resume && user.resume.url && (
+                    <Link
+                      to={user.resume.url}
+                      target="_blank"
+                      className="text-sm underline"
+                    >
+                      View resume
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
               <div className="grid gap-2">
