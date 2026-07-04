@@ -48,8 +48,6 @@ const userSlice = createSlice({
     },
     loadUserRequest(state, action) {
       state.loading = true;
-      state.isAuthenticated = false;
-      state.user = {};
       state.error = null;
     },
     loadUserSuccess(state, action) {
