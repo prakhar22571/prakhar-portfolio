@@ -26,14 +26,16 @@ import AddProject from "./sub-components/AddProject";
 import AddSoftwareApplications from "./sub-components/AddSoftwareApplications";
 import Account from "./sub-components/Account";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/store/slices/userSlice";
+import { logout, clearAllUserErrors } from "@/store/slices/userSlice";
 import { toast } from "react-toastify";
 import Messages from "./sub-components/Messages";
 import AddTimeline from "./sub-components/AddTimeline";
 
 const HomePage = () => {
   const [active, setActive] = useState("");
-  const { isAuthenticated, error, user } = useSelector((state) => state.user);
+  const { isAuthenticated, authChecked, error, user } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
@@ -45,10 +47,10 @@ const HomePage = () => {
       toast.error(error);
       dispatch(clearAllUserErrors());
     }
-    if (!isAuthenticated) {
+    if (authChecked && !isAuthenticated) {
       navigateTo("/login");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authChecked]);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 hidden w-14 flex-col border-r bg-background sm:flex z-50">
