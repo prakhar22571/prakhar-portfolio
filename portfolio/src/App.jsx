@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "./components/mode-toggle";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
-import Footer from "./pages/miniComponents/Footer";
+import { Loader } from "@/components/loader";
 import { PageTransition } from "@/components/page-transition";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,10 +46,9 @@ function App() {
           <header className="glass sticky top-0 z-50 flex justify-end px-4 py-2 sm:px-6">
             <ModeToggle />
           </header>
-          <Suspense fallback={null}>
+          <Suspense fallback={<Loader />}>
             <AnimatedRoutes />
           </Suspense>
-          <Footer />
           <ToastContainer position="bottom-right" theme="dark" />
         </Router>
       </LazyMotion>

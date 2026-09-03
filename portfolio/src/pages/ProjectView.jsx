@@ -7,6 +7,7 @@ import { GlassCard, CardContent } from "@/components/ui/glass-card";
 import { m } from "framer-motion";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { scaleTap } from "@/lib/motion";
+import Footer from "./miniComponents/Footer";
 
 const ProjectView = () => {
   const [title, setTitle] = useState("");
@@ -55,6 +56,7 @@ const ProjectView = () => {
   };
 
   return (
+    <>
     <div className="flex mt-7 justify-center items-center min-h-[100vh] sm:gap-4 sm:py-4">
       <div className="w-[100%] px-5 md:w-[1000px] pb-5">
         <GlassCard>
@@ -122,6 +124,8 @@ const ProjectView = () => {
         </GlassCard>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

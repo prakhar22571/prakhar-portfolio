@@ -6,6 +6,7 @@ import MyApps from "./miniComponents/MyApps";
 import About from "./miniComponents/About";
 import Portfolio from "./miniComponents/Portfolio";
 import Contact from "./miniComponents/Contact";
+import Footer from "./miniComponents/Footer";
 import { Loader } from "@/components/loader";
 import {
   PortfolioDataProvider,
@@ -34,6 +35,7 @@ const HomeContent = () => {
         <MyApps />
         <Contact />
       </article>
+      <Footer />
     </div>
   );
 };
