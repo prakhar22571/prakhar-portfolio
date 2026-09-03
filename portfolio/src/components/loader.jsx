@@ -1,12 +1,17 @@
+import { createPortal } from "react-dom";
 import { GlassCard } from "@/components/ui/glass-card";
 import { Button } from "@/components/ui/button";
 
 /**
  * Full-screen loading / error overlay shown while the portfolio data is being
  * fetched (the backend can take several seconds to wake up).
+ *
+ * Rendered through a portal to <body> so it always stays fixed to the viewport
+ * center — otherwise a transformed ancestor (the page-transition wrapper) would
+ * become its positioning context and make it jump around during that animation.
  */
 export function Loader({ error = false, onRetry }) {
-  return (
+  const overlay = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background px-5">
       <div
         aria-hidden="true"
@@ -41,4 +46,7 @@ export function Loader({ error = false, onRetry }) {
       </GlassCard>
     </div>
   );
+
+  if (typeof document === "undefined") return overlay;
+  return createPortal(overlay, document.body);
 }
