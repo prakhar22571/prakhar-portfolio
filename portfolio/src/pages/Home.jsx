@@ -6,8 +6,19 @@ import MyApps from "./miniComponents/MyApps";
 import About from "./miniComponents/About";
 import Portfolio from "./miniComponents/Portfolio";
 import Contact from "./miniComponents/Contact";
+import { Loader } from "@/components/loader";
+import {
+  PortfolioDataProvider,
+  usePortfolioData,
+} from "@/context/portfolio-data";
 
-const Home = () => {
+const HomeContent = () => {
+  const { status, reload } = usePortfolioData();
+
+  if (status !== "ready") {
+    return <Loader error={status === "error"} onRetry={reload} />;
+  }
+
   return (
     <div className="relative">
       <div
@@ -26,5 +37,11 @@ const Home = () => {
     </div>
   );
 };
+
+const Home = () => (
+  <PortfolioDataProvider>
+    <HomeContent />
+  </PortfolioDataProvider>
+);
 
 export default Home;

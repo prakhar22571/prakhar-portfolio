@@ -1,16 +1,9 @@
-import api from "../../lib/api";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RevealGroup, RevealItem } from "@/components/reveal";
+import { usePortfolioData } from "@/context/portfolio-data";
 
 const Timeline = () => {
-  const [timeline, setTimeline] = useState([]);
-  useEffect(() => {
-    const getMyTimeline = async () => {
-      const { data } = await api.get("/api/v1/timeline/getall");
-      setTimeline(data.timelines);
-    };
-    getMyTimeline();
-  }, []);
+  const { timeline } = usePortfolioData();
   return (
     <div>
       <h1 className="overflow-x-hidden text-[2rem] sm:text-[1.75rem] md:text-[2.2rem] lg:text-[2.8rem] mb-4 font-extrabold">

@@ -1,22 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/ui/glass-card";
-import api from "../../lib/api";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { m } from "framer-motion";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { scaleTap } from "@/lib/motion";
+import { usePortfolioData } from "@/context/portfolio-data";
 
 const Portfolio = () => {
   const [viewAll, setViewAll] = useState(false);
-  const [projects, setProjects] = useState([]);
-  useEffect(() => {
-    const getMyProjects = async () => {
-      const { data } = await api.get("/api/v1/project/getall");
-      setProjects(data.projects);
-    };
-    getMyProjects();
-  }, []);
+  const { projects } = usePortfolioData();
 
   const visibleProjects = viewAll ? projects : projects.slice(0, 9);
 

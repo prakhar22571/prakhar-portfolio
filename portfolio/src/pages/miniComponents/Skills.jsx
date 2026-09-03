@@ -1,17 +1,10 @@
 import { GlassCard } from "@/components/ui/glass-card";
-import api from "../../lib/api";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { RevealGroup, RevealItem } from "@/components/reveal";
+import { usePortfolioData } from "@/context/portfolio-data";
 
 const Skills = () => {
-  const [skills, setSkills] = useState([]);
-  useEffect(() => {
-    const getMySkills = async () => {
-      const { data } = await api.get("/api/v1/skill/getall");
-      setSkills(data.skills);
-    };
-    getMySkills();
-  }, []);
+  const { skills } = usePortfolioData();
   return (
     <div className="w-full flex flex-col gap-8 sm:gap-12">
       <h1

@@ -1,5 +1,5 @@
 import { ExternalLink, Github, Linkedin } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 import { m } from "framer-motion";
@@ -7,17 +7,10 @@ import { Button } from "@/components/ui/button";
 import { GlassCard, CardContent } from "@/components/ui/glass-card";
 import { RevealGroup, RevealItem } from "@/components/reveal";
 import { scaleTap } from "@/lib/motion";
-import api from "../../lib/api";
+import { usePortfolioData } from "@/context/portfolio-data";
 
 const Hero = () => {
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    const getMyProfile = async () => {
-      const { data } = await api.get("/api/v1/user/portfolio/me");
-      setUser(data.user);
-    };
-    getMyProfile();
-  }, []);
+  const { user } = usePortfolioData();
   return (
     <RevealGroup className="w-full" stagger={0.12}>
       <GlassCard className="p-6 sm:p-10">
