@@ -8,8 +8,12 @@ import { Loader } from "@/components/loader";
 import { PageTransition } from "@/components/page-transition";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// Not lazy: it's the landing page every visitor hits first, and its own
+// PortfolioDataProvider already shows a <Loader/> while data loads - lazy
+// import here would mount a second, separate Loader for the Suspense
+// fallback first, restarting the spin animation.
+import Home from "./pages/Home";
 
-const Home = lazy(() => import("./pages/Home"));
 const ProjectView = lazy(() => import("./pages/ProjectView"));
 
 function AnimatedRoutes() {
