@@ -6,3 +6,7 @@ dashboard/.env
 dashboard/.env.*
 portfolio/.env
 portfolio/.env.*
+!dashboard/.env.example
+!portfolio/.env.example
+**/dist/
+.tmp/

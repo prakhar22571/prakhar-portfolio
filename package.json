@@ -1,0 +1,11 @@
+{
+  "name": "prakhar-portfolio",
+  "private": true,
+  "scripts": {
+    "lint": "npm --prefix dashboard run lint && npm --prefix portfolio run lint && node scripts/lint-shared.cjs",
+    "test": "npm --prefix backend test && npm --prefix dashboard test && npm --prefix portfolio test",
+    "build": "npm --prefix dashboard run build && npm --prefix portfolio run build",
+    "check": "npm run lint && npm test && npm run build",
+    "format": "node dashboard/node_modules/prettier/bin/prettier.cjs --write \"{backend,dashboard/src,portfolio/src,shared/src,scripts}/**/*.{js,jsx,cjs}\""
+  }
+}
