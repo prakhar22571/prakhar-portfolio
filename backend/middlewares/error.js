@@ -1,41 +1,32 @@
-class ErrorHandler extends Error {
-  constructor(message, statusCode) {
+export default class ErrorHandler extends Error {
+  constructor(message, statusCode = 400) {
     super(message);
     this.statusCode = statusCode;
   }
 }
 
-export const errorMiddleware = (err, req, res, next) => {
-  err.message = err.message || "Internal Server Error";
-  err.statusCode = err.statusCode || 500;
-
-  if (err.code === 11000) {
-    const message = `Duplicate ${Object.keys(err.keyValue)} Entered`,
-      err = new ErrorHandler(message, 400);
+export const errorMiddleware = (error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  let status = error.statusCode || 500;
+  let message = error.message || "Internal Server Error";
+  if (error.code === 11000) {
+    status = 400;
+    message = `Duplicate ${Object.keys(error.keyValue || {}).join(", ")} entered`;
+  } else if (["JsonWebTokenError", "TokenExpiredError"].includes(error.name)) {
+    status = 401;
+    message = "Your session is invalid or expired. Please log in again.";
+  } else if (error.name === "CastError") {
+    status = 400;
+    message = `Invalid ${error.path}`;
+  } else if (error.name === "ValidationError") {
+    status = 400;
+    message = Object.values(error.errors)
+      .map((item) => item.message)
+      .join(" ");
   }
-  if (err.name === "JsonWebTokenError") {
-    const message = `Json Web Token is invalid, Try again!`;
-    err = new ErrorHandler(message, 400);
+  if (status >= 500) {
+    console.error(error);
+    message = "The request could not be completed. Please try again.";
   }
-  if (err.name === "TokenExpiredError") {
-    const message = `Json Web Token is expired, Try again!`;
-    err = new ErrorHandler(message, 400);
-  }
-  if (err.name === "CastError") {
-    const message = `Invalid ${err.path}`,
-      err = new ErrorHandler(message, 400);
-  }
-
-  const errorMessage = err.errors
-    ? Object.values(err.errors)
-        .map((error) => error.message)
-        .join(" ")
-    : err.message;
-
-  return res.status(err.statusCode).json({
-    success: false,
-    message: errorMessage,
-  });
+  return res.status(status).json({ success: false, message });
 };
-
-export default ErrorHandler;
