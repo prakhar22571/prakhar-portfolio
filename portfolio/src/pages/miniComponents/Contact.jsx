@@ -1,12 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { GlassCard, CardContent } from "@/components/ui/glass-card";
+import { Button } from "@portfolio/shared/components/ui/button";
+import { Input } from "@portfolio/shared/components/ui/input";
+import { Label } from "@portfolio/shared/components/ui/label";
+import {
+  GlassCard,
+  CardContent,
+} from "@portfolio/shared/components/ui/glass-card";
 import api from "../../lib/api";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { AnimatePresence, m } from "framer-motion";
-import { Reveal, RevealGroup, RevealItem } from "@/components/reveal";
+import {
+  Reveal,
+  RevealGroup,
+  RevealItem,
+} from "@portfolio/shared/components/reveal";
 import { Loader2 } from "lucide-react";
 
 const Contact = () => {
@@ -17,25 +24,21 @@ const Contact = () => {
   const handleMessage = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await api
-      .post(
-        "/api/v1/message/send",
-        { senderName, subject, message },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        setSenderName("");
-        setSubject("");
-        setMessage("");
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message || error.message);
-        setLoading(false);
+    try {
+      const { data } = await api.post("/api/v1/message/send", {
+        senderName,
+        subject,
+        message,
       });
+      toast.success(data.message);
+      setSenderName("");
+      setSubject("");
+      setMessage("");
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="overflow-x-hidden">
@@ -46,7 +49,9 @@ const Contact = () => {
             tracking-[15px] mx-auto w-fit font-extrabold about-h1 bg-background"
         >
           CONTACT
-          <span className="text-tubeLight-effect font-extrabold mr-[-15px]">ME</span>
+          <span className="text-tubeLight-effect font-extrabold mr-[-15px]">
+            ME
+          </span>
         </h1>
         <span className="absolute w-full h-1 top-7 sm:top-7 md:top-8 lg:top-11 z-[-1] bg-border"></span>
       </div>
@@ -54,10 +59,19 @@ const Contact = () => {
         <GlassCard>
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleMessage} className="flex flex-col gap-6">
-              <RevealGroup as="div" className="flex flex-col gap-6" stagger={0.1}>
+              <RevealGroup
+                as="div"
+                className="flex flex-col gap-6"
+                stagger={0.1}
+              >
                 <RevealItem className="flex flex-col gap-2 px-1.5">
-                  <Label className="text-xl">Your Name</Label>
+                  <Label htmlFor="sender-name" className="text-xl">
+                    Your Name
+                  </Label>
                   <Input
+                    id="sender-name"
+                    required
+                    minLength={2}
                     value={senderName}
                     onChange={(e) => setSenderName(e.target.value)}
                     placeholder="Your Name"
@@ -65,8 +79,13 @@ const Contact = () => {
                   />
                 </RevealItem>
                 <RevealItem className="flex flex-col gap-2 px-1.5">
-                  <Label className="text-xl">Subject</Label>
+                  <Label htmlFor="subject" className="text-xl">
+                    Subject
+                  </Label>
                   <Input
+                    id="subject"
+                    required
+                    minLength={2}
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="Subject"
@@ -74,12 +93,18 @@ const Contact = () => {
                   />
                 </RevealItem>
                 <RevealItem className="flex flex-col gap-2 px-1.5">
-                  <Label className="text-xl">Message</Label>
-                  <Input
+                  <Label htmlFor="message" className="text-xl">
+                    Message
+                  </Label>
+                  <textarea
+                    id="message"
+                    required
+                    minLength={2}
+                    rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Your Message"
-                    className="focus-visible:shadow-glow-sm"
+                    className="rounded-md border bg-background p-3 focus-visible:shadow-glow-sm"
                   />
                 </RevealItem>
               </RevealGroup>
@@ -93,7 +118,10 @@ const Contact = () => {
                       exit={{ opacity: 0 }}
                       className="w-full sm:w-52"
                     >
-                      <Button type="submit" className="w-full hover:shadow-glow">
+                      <Button
+                        type="submit"
+                        className="w-full hover:shadow-glow"
+                      >
                         SEND MESSAGE
                       </Button>
                     </m.div>

@@ -1,8 +1,7 @@
-# React + Vite
+The public portfolio is a React/Vite application backed by `../backend`.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Run `npm ci` from this directory, copy `.env.example` to `.env`, and set `VITE_API_URL` to the backend origin (for example `http://localhost:4000`). Do not append `/api/v1`. Run `npm run dev`, `npm run build`, `npm run lint`, or `npm test` as needed.
 
-Currently, two official plugins are available:
+Home data is fetched as one parallel batch, deduplicated during loading, and retained across project-page navigation. The existing loading/retry UI remains available when the API is unavailable. Direct project links have loading, error, and retry states.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Common UI comes from `@portfolio/shared`, installed from `../shared`. After changing shared source, rerun `npm ci` here. The deployment checkout must contain that sibling directory; see [the root README](../README.md). The React Toastify implementation is the single notification system.

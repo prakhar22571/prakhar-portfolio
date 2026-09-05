@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
-import { GlassCard } from "@/components/ui/glass-card";
-import { Button } from "@/components/ui/button";
+import { GlassCard } from "@portfolio/shared/components/ui/glass-card";
+import { Button } from "@portfolio/shared/components/ui/button";
 
 /**
  * Full-screen loading / error overlay shown while the portfolio data is being
@@ -24,17 +25,25 @@ export function Loader({ error = false, onRetry }) {
               Couldn&apos;t reach the server
             </p>
             <p className="max-w-xs text-sm text-muted-foreground">
-              The backend may still be waking up. Give it a moment and try again.
+              The backend may still be waking up. Give it a moment and try
+              again.
             </p>
             {onRetry && (
-              <Button onClick={onRetry} className="rounded-[30px] hover:shadow-glow">
+              <Button
+                onClick={onRetry}
+                className="rounded-[30px] hover:shadow-glow"
+              >
                 Retry
               </Button>
             )}
           </>
         ) : (
           <>
-            <span className="relative flex h-14 w-14" role="status" aria-label="Loading">
+            <span
+              className="relative flex h-14 w-14"
+              role="status"
+              aria-label="Loading"
+            >
               <span className="absolute inset-0 rounded-full border-2 border-glass-border" />
               <span className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-primary" />
             </span>
@@ -50,3 +59,8 @@ export function Loader({ error = false, onRetry }) {
   if (typeof document === "undefined") return overlay;
   return createPortal(overlay, document.body);
 }
+
+Loader.propTypes = {
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  onRetry: PropTypes.func,
+};

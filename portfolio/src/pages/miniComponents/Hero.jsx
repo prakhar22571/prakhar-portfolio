@@ -1,13 +1,15 @@
 import { ExternalLink, Github, Linkedin } from "lucide-react";
-import React from "react";
 import { Link } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
 import { m } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { GlassCard, CardContent } from "@/components/ui/glass-card";
-import { RevealGroup, RevealItem } from "@/components/reveal";
-import { scaleTap } from "@/lib/motion";
-import { usePortfolioData } from "@/context/portfolio-data";
+import { Button } from "@portfolio/shared/components/ui/button";
+import {
+  GlassCard,
+  CardContent,
+} from "@portfolio/shared/components/ui/glass-card";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
+import { scaleTap } from "@portfolio/shared/lib/motion";
+import { usePortfolioData } from "@/context/use-portfolio-data";
 
 const Hero = () => {
   const { user } = usePortfolioData();
@@ -24,7 +26,7 @@ const Hero = () => {
             className="overflow-x-hidden text-[1.3rem] sm:text-[1.75rem]
           md:text-[2.2rem] lg:text-[2.8rem] tracking-[2px] mb-4"
           >
-            Hey, I'm Prakhar
+            Hey, I&apos;m Prakhar
           </RevealItem>
           <RevealItem
             as="h1"

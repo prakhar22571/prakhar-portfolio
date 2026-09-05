@@ -1,5 +1,4 @@
-import React from "react";
-import { Reveal } from "@/components/reveal";
+import { Reveal } from "@portfolio/shared/components/reveal";
 
 const Footer = () => {
   return (

@@ -1,6 +1,5 @@
-import React from "react";
-import { RevealGroup, RevealItem } from "@/components/reveal";
-import { usePortfolioData } from "@/context/portfolio-data";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
+import { usePortfolioData } from "@/context/use-portfolio-data";
 
 const Timeline = () => {
   const { timeline } = usePortfolioData();

@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import Hero from "./miniComponents/Hero";
 import Timeline from "./miniComponents/Timeline";
 import Skills from "./miniComponents/Skills";
@@ -8,13 +8,14 @@ import Portfolio from "./miniComponents/Portfolio";
 import Contact from "./miniComponents/Contact";
 import Footer from "./miniComponents/Footer";
 import { Loader } from "@/components/loader";
-import {
-  PortfolioDataProvider,
-  usePortfolioData,
-} from "@/context/portfolio-data";
+import { usePortfolioData } from "@/context/use-portfolio-data";
 
 const HomeContent = () => {
-  const { status, reload } = usePortfolioData();
+  const { status, reload, load } = usePortfolioData();
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   if (status !== "ready") {
     return <Loader error={status === "error"} onRetry={reload} />;
@@ -40,10 +41,6 @@ const HomeContent = () => {
   );
 };
 
-const Home = () => (
-  <PortfolioDataProvider>
-    <HomeContent />
-  </PortfolioDataProvider>
-);
+const Home = () => <HomeContent />;
 
 export default Home;

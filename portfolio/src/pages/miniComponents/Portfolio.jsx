@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/ui/glass-card";
-import React, { useState } from "react";
+import { Button } from "@portfolio/shared/components/ui/button";
+import { GlassCard } from "@portfolio/shared/components/ui/glass-card";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { m } from "framer-motion";
-import { RevealGroup, RevealItem } from "@/components/reveal";
-import { scaleTap } from "@/lib/motion";
-import { usePortfolioData } from "@/context/portfolio-data";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
+import { scaleTap } from "@portfolio/shared/lib/motion";
+import { usePortfolioData } from "@/context/use-portfolio-data";
 
 const Portfolio = () => {
   const [viewAll, setViewAll] = useState(false);
@@ -31,7 +31,10 @@ const Portfolio = () => {
           md:text-[3rem] lg:text-[3.8rem] leading-[56px] md:leading-[67px] lg:leading-[90px]
           tracking-[15px] mx-auto w-fit font-extrabold about-h1 bg-background"
         >
-          MY <span className="text-tubeLight-effect font-extrabold mr-[-15px]">WORK</span>
+          MY{" "}
+          <span className="text-tubeLight-effect font-extrabold mr-[-15px]">
+            WORK
+          </span>
         </h1>
         <span className="absolute w-full h-1 top-7 sm:top-7 md:top-8 lg:top-11 z-[-1] bg-border"></span>
       </div>
