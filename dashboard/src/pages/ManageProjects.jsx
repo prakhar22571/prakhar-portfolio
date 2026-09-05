@@ -1,5 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { GlassCard, CardContent, CardHeader, CardTitle } from "@/components/ui/glass-card";
+import { useMutation } from "@/hooks/use-mutation";
+import { Button } from "@portfolio/shared/components/ui/button";
+import {
+  GlassCard,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@portfolio/shared/components/ui/glass-card";
 import {
   Table,
   TableCell,
@@ -7,65 +13,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import {
-  clearAllProjectErrors,
-  deleteProject,
-  getAllProjects,
-  resetProjectSlice,
-} from "@/store/slices/projectSlice";
+import { deleteProject } from "@/store/slices/projectSlice";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@radix-ui/react-tooltip";
+} from "@/components/ui/tooltip";
 import { Eye, Pen, Trash2 } from "lucide-react";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { RevealGroup, RevealItem } from "@/components/reveal";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
 
 const ManageProjects = () => {
   const navigateTo = useNavigate();
   const handleReturnToDashboard = () => {
     navigateTo("/");
   };
-  const { projects, loading, error, message } = useSelector(
-    (state) => state.project
-  );
+  const { projects, loading } = useSelector((state) => state.project);
 
-  const dispatch = useDispatch();
+  const mutate = useMutation();
   const handleProjectDelete = (id) => {
-    dispatch(deleteProject(id));
+    mutate(deleteProject(id), "Project deleted.");
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearAllProjectErrors());
-    }
-    if (message) {
-      toast.success(message);
-      dispatch(resetProjectSlice());
-      dispatch(getAllProjects());
-    }
-  }, [dispatch, error, loading, message]);
 
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-muted/40">
-      <div
-        aria-hidden="true"
-        className="bg-aurora animate-float pointer-events-none fixed inset-0 -z-10 opacity-60"
-      />
       <div className="p-4 sm:px-6 sm:py-4">
-        <Tabs defaultValue="week">
-          <TabsContent value="week">
+        <section>
+          <div>
             <GlassCard>
               <CardHeader className="flex gap-4 sm:justify-between sm:flex-row sm:items-center">
                 <CardTitle>Manage Your Projects</CardTitle>
-                <Button className="w-fit hover:shadow-glow" onClick={handleReturnToDashboard}>
+                <Button
+                  className="w-fit hover:shadow-glow"
+                  onClick={handleReturnToDashboard}
+                >
                   Return to Dashboard
                 </Button>
               </CardHeader>
@@ -84,7 +67,11 @@ const ManageProjects = () => {
                       <TableHead className="md:table-cell">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
-                  <RevealGroup as="tbody" className="[&_tr:last-child]:border-0" stagger={0.05}>
+                  <RevealGroup
+                    as="tbody"
+                    className="[&_tr:last-child]:border-0"
+                    stagger={0.05}
+                  >
                     {projects && projects.length > 0 ? (
                       projects.map((element) => {
                         return (
@@ -153,7 +140,8 @@ const ManageProjects = () => {
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <button
-                                      className="border-red-600 border-2 rounded-full h-8 w-8 flex justify-center items-center text-red-600  hover:text-slate-50 hover:bg-red-600"
+                                      disabled={loading}
+                                      className="border-red-600 border-2 rounded-full h-8 w-8 flex justify-center items-center text-red-600  hover:text-slate-50 hover:bg-red-600 disabled:opacity-50"
                                       onClick={() =>
                                         handleProjectDelete(element._id)
                                       }
@@ -181,8 +169,8 @@ const ManageProjects = () => {
                 </Table>
               </CardContent>
             </GlassCard>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </section>
       </div>
     </div>
   );

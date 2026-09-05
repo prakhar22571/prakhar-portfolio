@@ -1,92 +1,71 @@
-import React, { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  clearAllUserErrors,
-  resetProfile,
-  updatePassword,
-} from "@/store/slices/userSlice";
-import SpecialLoadingButton from "./SpecialLoadingButton";
-import { Reveal } from "@/components/reveal";
-
-const Profile = () => {
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const { loading, isAuthenticated, error, message, isUpdated } = useSelector(
-    (state) => state.user
-  );
-  const dispatch = useDispatch();
-
-  const handleUpdatePassword = () => {
-    dispatch(updatePassword(currentPassword, newPassword, confirmNewPassword));
-  };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearAllUserErrors());
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Button } from "@portfolio/shared/components/ui/button";
+import { Input } from "@portfolio/shared/components/ui/input";
+import { updatePassword } from "@/store/slices/userSlice";
+import { useMutation } from "@/hooks/use-mutation";
+export default function UpdatePassword() {
+  const [values, setValues] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+  const loading = useSelector((state) => state.user.loading);
+  const mutate = useMutation();
+  async function submit(event) {
+    event.preventDefault();
+    if (values.newPassword !== values.confirmNewPassword) {
+      event.currentTarget.elements.confirmNewPassword.setCustomValidity(
+        "Passwords do not match.",
+      );
+      event.currentTarget.reportValidity();
+      return;
     }
-    if (isUpdated) {
-      dispatch(resetProfile());
-    }
-    if (message) {
-      toast.success(message);
-    }
-  }, [dispatch, isAuthenticated, error, message]);
+    if (
+      await mutate(
+        updatePassword(
+          values.currentPassword,
+          values.newPassword,
+          values.confirmNewPassword,
+        ),
+        "Password updated.",
+      )
+    )
+      setValues({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+  }
   return (
-    <Reveal as="div" className="w-full h-full">
-      <div>
-          <div className="grid w-[100%] gap-6">
-            <div className="grid gap-2">
-              <h1 className="text-3xl font-bold">Update Password</h1>
-              <p className="text-balance text-muted-foreground">
-                Update Your Password
-              </p>
-            </div>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label>Current Password</Label>
-                <Input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>New Password</Label>
-                <Input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Confirm New Password</Label>
-                <Input
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                />
-              </div>
-              {!loading ? (
-                <Button
-                  onClick={() => handleUpdatePassword()}
-                  className="w-full"
-                >
-                  Update Password
-                </Button>
-              ) : (
-                <SpecialLoadingButton content={"Updating Password"} />
-              )}
-            </div>
-          </div>
-        </div>
-      </Reveal>
+    <form className="grid gap-4" onSubmit={submit}>
+      <h1 className="text-3xl font-bold">Update password</h1>
+      {Object.entries({
+        currentPassword: "Current password",
+        newPassword: "New password",
+        confirmNewPassword: "Confirm new password",
+      }).map(([key, label]) => (
+        <label key={key} className="grid gap-2">
+          {label}
+          <Input
+            name={key}
+            type="password"
+            autoComplete={
+              key === "currentPassword" ? "current-password" : "new-password"
+            }
+            minLength={key === "currentPassword" ? undefined : 8}
+            required
+            value={values[key]}
+            onChange={(event) => {
+              event.target.setCustomValidity("");
+              setValues((old) => ({ ...old, [key]: event.target.value }));
+            }}
+          />
+        </label>
+      ))}
+      <Button type="submit" disabled={loading}>
+        {loading ? "Saving..." : "Update password"}
+      </Button>
+    </form>
   );
-};
-
-export default Profile;
+}

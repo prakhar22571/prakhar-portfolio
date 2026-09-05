@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@portfolio/shared/components/ui/button";
 import {
   GlassCard,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/glass-card";
+} from "@portfolio/shared/components/ui/glass-card";
 import { Progress } from "@/components/ui/progress";
 import {
   Table,
@@ -16,106 +16,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { clearAllSkillErrors } from "@/store/slices/skillSlice";
-import {
-  clearAllSoftwareAppErrors,
-  deleteSoftwareApplication,
-  getAllSoftwareApplications,
-  resetSoftwareApplicationSlice,
-} from "@/store/slices/softwareApplicationSlice";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import SpecialLoadingButton from "./SpecialLoadingButton";
-import { clearAllTimelineErrors } from "@/store/slices/timelineSlice";
-import { clearAllProjectErrors } from "@/store/slices/projectSlice";
-import { RevealGroup, RevealItem } from "@/components/reveal";
+import { deleteSoftwareApplication } from "@/store/slices/softwareApplicationSlice";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
+import { useMutation } from "@/hooks/use-mutation";
 const Dashboard = () => {
   const navigateTo = useNavigate();
-  const gotoMangeSkills = () => {
-    navigateTo("/manage/skills");
-  };
-  const gotoMangeTimeline = () => {
-    navigateTo("/manage/timeline");
-  };
-  const gotoMangeProjects = () => {
-    navigateTo("/manage/projects");
-  };
-
+  const gotoMangeSkills = () => navigateTo("/manage/skills");
+  const gotoMangeTimeline = () => navigateTo("/manage/timeline");
+  const gotoMangeProjects = () => navigateTo("/manage/projects");
   const { user } = useSelector((state) => state.user);
-  const {
-    skills,
-    loading: skillLoading,
-    error: skillError,
-    message: skillMessage,
-  } = useSelector((state) => state.skill);
-  const {
-    softwareApplications,
-    loading: appLoading,
-    error: appError,
-    message: appMessage,
-  } = useSelector((state) => state.softwareApplications);
-  const {
-    timeline,
-    loading: timelineLoading,
-    error: timelineError,
-    message: timelineMessage,
-  } = useSelector((state) => state.timeline);
-  const { projects, error: projectError } = useSelector(
-    (state) => state.project
+  const { skills } = useSelector((state) => state.skill);
+  const { projects } = useSelector((state) => state.project);
+  const { timeline } = useSelector((state) => state.timeline);
+  const { softwareApplications, loading: appLoading } = useSelector(
+    (state) => state.softwareApplications,
   );
-
   const [appId, setAppId] = useState(null);
-  const handleDeleteSoftwareApp = (id) => {
+  const mutate = useMutation();
+  const handleDeleteSoftwareApp = async (id) => {
     setAppId(id);
-    dispatch(deleteSoftwareApplication(id));
+    await mutate(deleteSoftwareApplication(id), "Application deleted.");
+    setAppId(null);
   };
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (skillError) {
-      toast.error(skillError);
-      dispatch(clearAllSkillErrors());
-    }
-    if (appError) {
-      toast.error(appError);
-      dispatch(clearAllSoftwareAppErrors());
-    }
-    if (projectError) {
-      toast.error(projectError);
-      dispatch(clearAllProjectErrors());
-    }
-    if (appMessage) {
-      toast.success(appMessage);
-      setAppId(null);
-      dispatch(resetSoftwareApplicationSlice());
-      dispatch(getAllSoftwareApplications());
-    }
-    if (timelineError) {
-      toast.error(timelineError);
-      dispatch(clearAllTimelineErrors());
-    }
-  }, [
-    dispatch,
-    skillLoading,
-    skillError,
-    skillMessage,
-    appLoading,
-    appError,
-    appMessage,
-    timelineError,
-    timelineLoading,
-    timelineMessage,
-  ]);
-
   return (
     <div className="relative flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-      <div
-        aria-hidden="true"
-        className="bg-aurora animate-float pointer-events-none fixed inset-0 -z-10 opacity-60"
-      />
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
           <RevealGroup
@@ -131,7 +59,15 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Button className="hover:shadow-glow">Visit Portfolio</Button>
+                  <Button asChild disabled={!user.portfolioURL}>
+                    <a
+                      href={user.portfolioURL || undefined}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Visit Portfolio
+                    </a>
+                  </Button>
                 </CardFooter>
               </GlassCard>
             </RevealItem>
@@ -144,7 +80,10 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardFooter>
-                  <Button onClick={gotoMangeProjects} className="hover:shadow-glow">
+                  <Button
+                    onClick={gotoMangeProjects}
+                    className="hover:shadow-glow"
+                  >
                     Manage Projects
                   </Button>
                 </CardFooter>
@@ -159,15 +98,18 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardFooter>
-                  <Button onClick={gotoMangeSkills} className="hover:shadow-glow">
+                  <Button
+                    onClick={gotoMangeSkills}
+                    className="hover:shadow-glow"
+                  >
                     Manage Skill
                   </Button>
                 </CardFooter>
               </GlassCard>
             </RevealItem>
           </RevealGroup>
-          <Tabs>
-            <TabsContent>
+          <section>
+            <div>
               <GlassCard>
                 <CardHeader className="px-7">
                   <CardTitle>Projects</CardTitle>
@@ -183,13 +125,15 @@ const Dashboard = () => {
                         <TableHead className="hidden md:table-cell">
                           Deployed
                         </TableHead>
-                        <TableHead className="md:table-cell">
-                          Update
-                        </TableHead>
+                        <TableHead className="md:table-cell">Update</TableHead>
                         <TableHead className="text-right">Visit</TableHead>
                       </TableRow>
                     </TableHeader>
-                    <RevealGroup as="tbody" className="[&_tr:last-child]:border-0" stagger={0.05}>
+                    <RevealGroup
+                      as="tbody"
+                      className="[&_tr:last-child]:border-0"
+                      stagger={0.05}
+                    >
                       {projects && projects.length > 0 ? (
                         projects.map((element) => {
                           return (
@@ -207,10 +151,7 @@ const Dashboard = () => {
                                 {element.stack}
                               </TableCell>
                               <TableCell className="hidden md:table-cell">
-                                <Badge
-                                  className="text-xs"
-                                  variant="secondary"
-                                >
+                                <Badge className="text-xs" variant="secondary">
                                   {element.deployed}
                                 </Badge>
                               </TableCell>
@@ -220,10 +161,7 @@ const Dashboard = () => {
                                 </Link>
                               </TableCell>
                               <TableCell className="text-right">
-                                <Link
-                                  to={element.projectLink}
-                                  target="_blank"
-                                >
+                                <Link to={element.projectLink} target="_blank">
                                   <Button>Visit</Button>
                                 </Link>
                               </TableCell>
@@ -241,15 +179,19 @@ const Dashboard = () => {
                   </Table>
                 </CardContent>
               </GlassCard>
-            </TabsContent>
-          </Tabs>
-          <Tabs>
-            <TabsContent>
+            </div>
+          </section>
+          <section>
+            <div>
               <GlassCard>
                 <CardHeader className="px-7 gap-3">
                   <CardTitle>Skills</CardTitle>
                 </CardHeader>
-                <RevealGroup as="div" className="grid sm:grid-cols-2 gap-4 p-6 pt-0" stagger={0.06}>
+                <RevealGroup
+                  as="div"
+                  className="grid sm:grid-cols-2 gap-4 p-6 pt-0"
+                  stagger={0.06}
+                >
                   {skills && skills.length > 0 ? (
                     skills.map((element) => {
                       return (
@@ -268,10 +210,10 @@ const Dashboard = () => {
                   )}
                 </RevealGroup>
               </GlassCard>
-            </TabsContent>
-          </Tabs>
-          <Tabs>
-            <TabsContent className="grid min-[1050px]:grid-cols-2 gap-4">
+            </div>
+          </section>
+          <section>
+            <div className="grid min-[1050px]:grid-cols-2 gap-4">
               <GlassCard>
                 <CardHeader className="px-7">
                   <CardTitle>Software Applications</CardTitle>
@@ -287,7 +229,11 @@ const Dashboard = () => {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <RevealGroup as="tbody" className="[&_tr:last-child]:border-0" stagger={0.05}>
+                    <RevealGroup
+                      as="tbody"
+                      className="[&_tr:last-child]:border-0"
+                      stagger={0.05}
+                    >
                       {softwareApplications &&
                       softwareApplications.length > 0 ? (
                         softwareApplications.map((element) => {
@@ -342,7 +288,10 @@ const Dashboard = () => {
               <GlassCard>
                 <CardHeader className="px-7 flex items-center justify-between flex-row">
                   <CardTitle>Timeline</CardTitle>
-                  <Button onClick={gotoMangeTimeline} className="w-fit hover:shadow-glow">
+                  <Button
+                    onClick={gotoMangeTimeline}
+                    className="w-fit hover:shadow-glow"
+                  >
                     Manage Timeline
                   </Button>
                 </CardHeader>
@@ -357,7 +306,11 @@ const Dashboard = () => {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <RevealGroup as="tbody" className="[&_tr:last-child]:border-0" stagger={0.05}>
+                    <RevealGroup
+                      as="tbody"
+                      className="[&_tr:last-child]:border-0"
+                      stagger={0.05}
+                    >
                       {timeline && timeline.length > 0 ? (
                         timeline.map((element) => {
                           return (
@@ -389,8 +342,8 @@ const Dashboard = () => {
                   </Table>
                 </CardContent>
               </GlassCard>
-            </TabsContent>
-          </Tabs>
+            </div>
+          </section>
         </div>
       </main>
     </div>

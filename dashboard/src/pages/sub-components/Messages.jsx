@@ -1,23 +1,18 @@
-import { Button } from "@/components/ui/button";
+import { useMutation } from "@/hooks/use-mutation";
+import { Button } from "@portfolio/shared/components/ui/button";
 import {
   GlassCard,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/glass-card";
-import {
-  clearAllMessageErrors,
-  deleteMessage,
-  getAllMessages,
-  resetMessagesSlice,
-} from "@/store/slices/messageSlice";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+} from "@portfolio/shared/components/ui/glass-card";
+import { deleteMessage } from "@/store/slices/messageSlice";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import SpecialLoadingButton from "./SpecialLoadingButton";
 import { useNavigate } from "react-router-dom";
-import { RevealGroup, RevealItem } from "@/components/reveal";
+import { RevealGroup, RevealItem } from "@portfolio/shared/components/reveal";
 
 const Messages = () => {
   const navigateTo = useNavigate();
@@ -25,43 +20,33 @@ const Messages = () => {
     navigateTo("/");
   };
 
-  const { messages, loading, error, message } = useSelector(
-    (state) => state.messages
-  );
+  const { messages, loading } = useSelector((state) => state.messages);
 
   const [messageId, setMessageId] = useState("");
   const handleMessageDelete = (id) => {
     setMessageId(id);
-    dispatch(deleteMessage(id));
+    mutate(deleteMessage(id), "Message deleted.");
   };
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearAllMessageErrors());
-    }
-    if (message) {
-      toast.success(message);
-      dispatch(resetMessagesSlice());
-      dispatch(getAllMessages());
-    }
-  }, [dispatch, error, message, loading]);
+  const mutate = useMutation();
 
   return (
     <div className="relative min-h-[100vh] sm:gap-4 sm:py-4 sm:pl-20 px-4">
-      <div
-        aria-hidden="true"
-        className="bg-aurora animate-float pointer-events-none fixed inset-0 -z-10 opacity-60"
-      />
       <GlassCard>
         <CardHeader className="flex gap-4 sm:justify-between sm:flex-row sm:items-center">
           <CardTitle>Messages</CardTitle>
-          <Button className="w-fit hover:shadow-glow" onClick={handleReturnToDashboard}>
+          <Button
+            className="w-fit hover:shadow-glow"
+            onClick={handleReturnToDashboard}
+          >
             Return to Dashboard
           </Button>
         </CardHeader>
-        <RevealGroup as="div" className="grid sm:grid-cols-2 gap-4 p-6 pt-0" stagger={0.06}>
+        <RevealGroup
+          as="div"
+          className="grid sm:grid-cols-2 gap-4 p-6 pt-0"
+          stagger={0.06}
+        >
           {messages && messages.length > 0 ? (
             messages.map((element) => {
               return (

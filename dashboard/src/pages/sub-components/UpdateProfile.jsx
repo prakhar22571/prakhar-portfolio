@@ -1,264 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  clearAllUserErrors,
-  getUser,
-  resetProfile,
-  updateProfile,
-} from "@/store/slices/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Button } from "@portfolio/shared/components/ui/button";
+import { Input } from "@portfolio/shared/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import SpecialLoadingButton from "./SpecialLoadingButton";
-import { Link } from "react-router-dom";
-import { FileText } from "lucide-react";
-import { Reveal } from "@/components/reveal";
-
-const UpdateProfile = () => {
-  const { user, loading, error, isUpdated, message } = useSelector(
-    (state) => state.user
-  );
-
-  const [fullName, setFullName] = useState(user && user.fullName);
-  const [email, setEmail] = useState(user && user.email);
-  const [phone, setPhone] = useState(user && user.phone);
-  const [aboutMe, setAboutMe] = useState(user && user.aboutMe);
-  const [portfolioURL, setPortfolioURL] = useState(user && user.portfolioURL);
-  const [linkedInURL, setLinkedInURL] = useState(
-    user && (user.linkedInURL === "undefined" ? "" : user.linkedInURL)
-  );
-  const [githubURL, setGithubURL] = useState(
-    user && (user.githubURL === "undefined" ? "" : user.githubURL)
-  );
-  const [instagramURL, setInstagramURL] = useState(
-    user && (user.instagramURL === "undefined" ? "" : user.instagramURL)
-  );
-  const [twitterURL, setTwitterURL] = useState(
-    user && (user.twitterURL === "undefined" ? "" : user.twitterURL)
-  );
-  const [facebookURL, setFacebookURL] = useState(
-    user && (user.facebookURL === "undefined" ? "" : user.facebookURL)
-  );
-  const [avatar, setAvatar] = useState(user && user.avatar && user.avatar.url);
-  const [avatarPreview, setAvatarPreview] = useState(
-    user && user.avatar && user.avatar.url
-  );
+import { FileUpload } from "@portfolio/shared/components/file-upload";
+import { updateProfile } from "@/store/slices/userSlice";
+import { useMutation } from "@/hooks/use-mutation";
+import { profileFields, profileValues } from "@/lib/profile-fields";
+export default function UpdateProfile() {
+  const { user, loading } = useSelector((state) => state.user);
+  const [values, setValues] = useState(() => profileValues(user));
+  const [avatar, setAvatar] = useState(null);
   const [resume, setResume] = useState(null);
-
-  const dispatch = useDispatch();
-
-  const avatarHandler = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setAvatarPreview(reader.result);
-      setAvatar(file);
-    };
-  };
-  const resumeHandler = (e) => {
-    const file = e.target.files[0];
-    setResume(file);
-  };
-
-  const handleUpdateProfile = () => {
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("aboutMe", aboutMe);
-    formData.append("portfolioURL", portfolioURL);
-    formData.append("linkedInURL", linkedInURL);
-    formData.append("githubURL", githubURL);
-    formData.append("instagramURL", instagramURL);
-    formData.append("twitterURL", twitterURL);
-    formData.append("facebookURL", facebookURL);
-    formData.append("avatar", avatar);
-    formData.append("resume", resume);
-    dispatch(updateProfile(formData));
-  };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearAllUserErrors());
+  const mutate = useMutation();
+  async function submit(event) {
+    event.preventDefault();
+    const data = new FormData();
+    for (const [key, value] of Object.entries(values)) data.append(key, value);
+    if (avatar) data.append("avatar", avatar);
+    if (resume) data.append("resume", resume);
+    if (await mutate(updateProfile(data), "Profile updated.")) {
+      setAvatar(null);
+      setResume(null);
     }
-    if (isUpdated) {
-      dispatch(getUser());
-      dispatch(resetProfile());
-    }
-    if (message) {
-      toast.success(message);
-    }
-  }, [dispatch, loading, error, isUpdated]);
-
+  }
   return (
-    <Reveal as="div" className="w-full h-full">
-      <div>
-          <div className="grid w-[100%] gap-6">
-            <div className="grid gap-2">
-              <h1 className="text-3xl font-bold">Update Profile</h1>
-              <p className="text-balance text-muted-foreground">
-                Update Your Profile Here
-              </p>
-            </div>
-            <div className="grid gap-4">
-              <div className="flex items-start lg:justify-between lg:items-center flex-col lg:flex-row gap-5">
-                <div className="grid gap-2 w-full sm:w-72">
-                  <Label>Profile Image</Label>
-                  <img
-                    src={avatarPreview ? avatarPreview : "/avatarHolder.jpg"}
-                    alt="avatar"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-auto sm:w-72 sm:h-72 rounded-2xl shadow-glow-sm"
-                  />
-                  <div className="relative">
-                    <input
-                      type="file"
-                      onChange={avatarHandler}
-                      className="avatar-update-btn"
-                    />
-                  </div>
-                </div>
-                <div className="grid gap-2 w-full sm:w-72">
-                  <Label>Resume</Label>
-                  <div className="w-full sm:w-72 min-h-32 rounded-2xl border flex flex-col items-center justify-center gap-2 p-6 text-center">
-                    <FileText className="w-10 h-10 shrink-0" />
-                    <span className="text-sm break-all">
-                      {resume
-                        ? resume.name
-                        : user && user.resume
-                        ? "Current resume on file"
-                        : "No resume uploaded"}
-                    </span>
-                    {user && user.resume && user.resume.url && (
-                      <Link
-                        to={user.resume.url}
-                        target="_blank"
-                        className="text-sm underline"
-                      >
-                        View current resume
-                      </Link>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={resumeHandler}
-                      className="avatar-update-btn"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label>Full Name</Label>
-                <Input
-                  type="text"
-                  className="Your Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Email</Label>
-                <Input
-                  type="email"
-                  className="Your Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Phone</Label>
-                <Input
-                  type="text"
-                  className="Phone Number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>About Me</Label>
-                <Textarea
-                  className="About Me"
-                  value={aboutMe}
-                  onChange={(e) => setAboutMe(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Portfolio URL</Label>
-                <Input
-                  type="text"
-                  className="Portfolio URL"
-                  value={portfolioURL}
-                  onChange={(e) => setPortfolioURL(e.target.value)}
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label>LinkedIn URL</Label>
-                <Input
-                  type="text"
-                  className="LinkedIn URL"
-                  value={linkedInURL}
-                  onChange={(e) => setLinkedInURL(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Github URL</Label>
-                <Input
-                  type="text"
-                  className="Github URL"
-                  value={githubURL}
-                  onChange={(e) => setGithubURL(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Instagram URL</Label>
-                <Input
-                  type="text"
-                  className="Instagram URL"
-                  value={instagramURL}
-                  onChange={(e) => setInstagramURL(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Twitter(X) URL</Label>
-                <Input
-                  type="text"
-                  className="Twitter(X) URL"
-                  value={twitterURL}
-                  onChange={(e) => setTwitterURL(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label>Facebook URL</Label>
-                <Input
-                  type="text"
-                  className="Facebook URL"
-                  value={facebookURL}
-                  onChange={(e) => setFacebookURL(e.target.value)}
-                />
-              </div>
-              {!loading ? (
-                <Button
-                  onClick={() => handleUpdateProfile()}
-                  className="w-full"
-                >
-                  Update Profile
-                </Button>
-              ) : (
-                <SpecialLoadingButton content={"Updating"} />
-              )}
-            </div>
-          </div>
-        </div>
-      </Reveal>
+    <form className="grid gap-5" onSubmit={submit}>
+      <h1 className="text-3xl font-bold">Update profile</h1>
+      <div className="grid md:grid-cols-2 gap-5">
+        <FileUpload
+          label="Profile image"
+          file={avatar}
+          currentUrl={user.avatar?.url}
+          onChange={setAvatar}
+        />
+        <FileUpload
+          label="Resume"
+          kind="pdf"
+          file={resume}
+          currentUrl={user.resume?.url}
+          onChange={setResume}
+        />
+      </div>
+      {profileFields.map(({ key, label, multiline, ...props }) => {
+        const Field = multiline ? Textarea : Input;
+        return (
+          <label key={key} className="grid gap-2">
+            {label}
+            <Field
+              {...props}
+              value={values[key]}
+              onChange={(event) =>
+                setValues((old) => ({ ...old, [key]: event.target.value }))
+              }
+            />
+          </label>
+        );
+      })}
+      <Button type="submit" disabled={loading}>
+        {loading ? "Saving..." : "Update profile"}
+      </Button>
+    </form>
   );
-};
-
-export default UpdateProfile;
+}
