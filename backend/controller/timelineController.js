@@ -1,38 +1,25 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../middlewares/error.js";
 import { Timeline } from "../models/timelineSchema.js";
-
-export const postTimeline = catchAsyncErrors(async (req, res, next) => {
+export const postTimeline = catchAsyncErrors(async (req, res) => {
   const { title, description, from, to } = req.body;
   const newTimeline = await Timeline.create({
     title,
     description,
     timeline: { from, to },
   });
-  res.status(200).json({
-    success: true,
-    message: "Timeline Added!",
-    newTimeline,
-  });
+  res
+    .status(201)
+    .json({ success: true, message: "Timeline added.", newTimeline });
 });
-
-export const deleteTimeline = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.params;
-  let timeline = await Timeline.findById(id);
-  if (!timeline) {
-    return next(new ErrorHandler("Timeline not found", 404));
-  }
-  await timeline.deleteOne();
-  res.status(200).json({
-    success: true,
-    message: "Timeline Deleted!",
-  });
+export const deleteTimeline = catchAsyncErrors(async (req, res) => {
+  if (!(await Timeline.findByIdAndDelete(req.params.id)))
+    throw new ErrorHandler("Timeline not found.", 404);
+  res.json({ success: true, message: "Timeline deleted." });
 });
-
-export const getAllTimelines = catchAsyncErrors(async (req, res, next) => {
-  const timelines = await Timeline.find().sort({ _id: -1 });
-  res.status(200).json({
+export const getAllTimelines = catchAsyncErrors(async (req, res) => {
+  res.json({
     success: true,
-    timelines,
+    timelines: await Timeline.find().sort({ _id: -1 }),
   });
 });

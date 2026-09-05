@@ -1,22 +1,9 @@
 import mongoose from "mongoose";
-
-const softwareApplicationSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  svg: {
-    public_id: {
-      type: String,
-      required: true,
-    },
-    url: {
-      type: String,
-      required: true,
-    },
-  },
-});
-
+import { requiredText, assetFields } from "./fields.js";
 export const SoftwareApplication = mongoose.model(
   "SoftwareApplication",
-  softwareApplicationSchema
+  new mongoose.Schema({
+    name: requiredText("Name"),
+    svg: assetFields,
+  }),
 );

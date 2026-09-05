@@ -3,7 +3,6 @@ import {
   deleteTimeline,
   getAllTimelines,
   postTimeline,
-  // updateTimeline,
 } from "../controller/timelineController.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
