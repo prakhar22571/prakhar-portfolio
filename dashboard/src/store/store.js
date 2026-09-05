@@ -1,20 +1,21 @@
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./slices/userSlice";
-import forgotPasswordReducer from "./slices/forgotResetPasswordSlice";
-import skillReducer from "./slices/skillSlice";
-import projectReducer from "./slices/projectSlice";
-import timelineReducer from "./slices/timelineSlice";
-import softwareApplicationReducer from "./slices/softwareApplicationSlice";
-import messageReducer from "./slices/messageSlice";
-
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import user from "./slices/userSlice";
+import skill from "./slices/skillSlice";
+import project from "./slices/projectSlice";
+import timeline from "./slices/timelineSlice";
+import softwareApplications from "./slices/softwareApplicationSlice";
+import messages from "./slices/messageSlice";
+const combined = combineReducers({
+  user,
+  skill,
+  project,
+  timeline,
+  softwareApplications,
+  messages,
+});
 export const store = configureStore({
-  reducer: {
-    user: userReducer,
-    forgotPassword: forgotPasswordReducer,
-    skill: skillReducer,
-    project: projectReducer,
-    timeline: timelineReducer,
-    softwareApplications: softwareApplicationReducer,
-    messages: messageReducer,
+  reducer: (state, action) => {
+    if (action.type === "user/logout/fulfilled") state = undefined;
+    return combined(state, action);
   },
 });
