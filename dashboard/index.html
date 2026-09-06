@@ -5,6 +5,41 @@
     <link rel="icon" type="image/svg+xml" href="/p_logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Prakhar's Dashboard</title>
+    <style>
+      /* Critical: paint the themed background before the app bundle/CSS loads
+         so there is no white flash on first load or refresh. */
+      :root {
+        --app-bg: 0 0% 100%;
+      }
+      html.dark {
+        --app-bg: 222.2 84% 4.9%;
+      }
+      html {
+        background-color: hsl(var(--app-bg));
+      }
+    </style>
+    <script>
+      // Resolve the persisted theme and set the <html> class before first paint.
+      // Mirrors ThemeProvider (storageKey "vite-ui-theme", default "dark").
+      (function () {
+        try {
+          var saved = localStorage.getItem("vite-ui-theme");
+          var theme =
+            ["light", "dark", "system"].indexOf(saved) !== -1 ? saved : "dark";
+          var resolved =
+            theme === "system"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : theme;
+          document.documentElement.classList.add(resolved);
+          document.documentElement.style.colorScheme = resolved;
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = "dark";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
